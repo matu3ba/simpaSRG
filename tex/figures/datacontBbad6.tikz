@@ -1,0 +1,23 @@
+\begin{tikzpicture}[every node/.style={minimum size=.5cm-\pgflinewidth, outer sep=0pt}]%
+    \node[fill=gray] at (0.25,+0.25) { 0};
+    \node[fill=gray] at (0.25,+0.75) {0};
+    \node[fill=gray] at (0.75,+0.25) { 1};
+    \node[fill=gray] at (0.75,+0.75) {1};
+    \node[fill=gray] at (1.25,+0.25) { 2};
+    \node[fill=gray] at (1.25,+0.75) {2};
+    \node[fill=lightgray] at (1.75,+0.25) { 3};
+    \node[fill=purple] at (1.75,+0.75) {3};
+    \node[fill=lightgray] at (2.25,+0.25) { 4};
+    \node[fill=lightgray] at (2.25,+0.75) {4};
+    \node[fill=lightgray] at (2.75,+0.25) { 5};
+    \node[fill=lightgray] at (2.75,+0.75) {5};
+    \node[fill=lightgray] at (3.25,+0.25) { 6};
+    \node[fill=lightgray] at (3.25,+0.75) {6};
+    \node[fill=lightgray] at (3.75,+0.25) { 7};
+    \node[fill=lightgray] at (3.75,+0.75) {7};
+    \draw[step=0.5cm,color=black] (0,0) grid (4,1);
+    \draw[color=red,line width=0.5mm] (0.025,0.025) rectangle +(1.95,0.45);
+    \draw[color=blue,line width=0.5mm] (2.025,0.025) rectangle +(1.95,0.45);
+    \draw[color=red,line width=0.5mm] (0.025,0.525) rectangle +(1.95,0.45);
+    \draw[color=blue,line width=0.5mm] (2.025,0.525) rectangle +(1.95,0.45);
+\end{tikzpicture}%

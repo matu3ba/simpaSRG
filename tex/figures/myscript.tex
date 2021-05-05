@@ -1,0 +1,16 @@
+%!TEX program = lualatex
+\documentclass{article}
+\usepackage{shellesc}
+\usepackage{luacode}
+\directlua{toprocess = [[\zzz]]}
+\begin{document}
+\begin{luacode*}
+--We capture only strings with .tikz as suffix
+for w in string.gmatch(toprocess, "[^,%s]+%.tikz") do
+--We remove the suffix so it doesn't appear in PDF filenames
+    w = string.gsub(w, "([^,%s]+)%.tikz", "%1")
+    os.execute([[lualatex -jobname ]]..w..[[ '\def\zzz{]]..w..[[.tikz} \input tikzmaster.tex']])
+end
+\end{luacode*}
+Yay! % To avoid error messages. This actually does nothing.
+\end{document}

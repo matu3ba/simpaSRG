@@ -1,0 +1,5 @@
+\begin{tikzpicture}[every node/.style={minimum size=.5cm-\pgflinewidth, outer sep=0pt}]%
+    \draw[step=0.5cm,draw=none] (0,0) grid (2,2);
+    \node[] at (1,1) {checking neighbors..};
+\end{tikzpicture}%
+

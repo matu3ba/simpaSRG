@@ -1,0 +1,1080 @@
+% !TeX program = lualatex
+% !TeX spellcheck = en_US
+% !TeX encoding = UTF-8
+
+% COMPILE WITH:
+% latexmk -pdflatex=lualatex -pdf -outdir=build %
+% You need lualatex and biber (in all TeXLive distributions)
+\documentclass{article}
+%\usepackage{luatex85,shellesc}
+
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{enumitem}
+\input{./packages}
+\usepackage[plainpages=false]{hyperref}
+\usepackage[nameinlink]{cleveref} %no support in beamer
+\input{./glossaries}
+\bibliography{references.bib}
+\captionsetup[subfigure]{singlelinecheck=off,justification=raggedright}
+
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+%\newcommand{\ceil}[1]{\lceil #1 \rceil}
+%\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+%\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+%\addbibresource{references.bib}
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=externalized/,optimize command away=\includepdf]
+%\tikzexternalize %activate
+
+%\setlength{\abovecaptionskip}{-2pt}
+
+\title{Robust, in-place, parallelized Seeded Region Growing for 3D image segmentation}
+\author{Jan Philipp Hafer}%[ jan at rwth minus aachen dot de ]
+%\thanks{Dr. Felix Gremse}
+\date{\today}
+%\publishers{Supervisor Dr. Felix Gremse}
+\begin{document}
+\maketitle
+\begin{abstract}
+  This work establishes \textbf{robust, in-place, parallelized}~\ac{srg} with a self-created
+  reference implementation called \ac{simpa} and investigates parallelization metrics.\par
+  %shared memory parallel
+  %maybe better wording? robust means good performance in the worst case
+  %maybe in-place means memory alloaction sufficiently lower than the size of the input data
+  To our knowledge this work is also the first one to describe an \textbf{upper-bound memory} of~\ac{srg}.
+  Other bounds of cuboid-shaped input data are derivable with the same method.\par
+  We identify 2 factors that contribute to the needed time of~\ac{simpa}:
+  \texttt{1.memory access delay} and \texttt{2.cache-contention}.
+  Memory access delay dominates on small input sizes or sparse structures, since the algorithm-queue and prefetched data fits into L3 cache.
+  The exception is cache-contention happening between CPU cores in tube-like structures, 
+  since memory changes in the same cache lines require communication between the cores to synchronise the write-order with performance implications.\par
+  \textbf{Benchmarking} results on the RWTH Aachen cluster, with up to 24 CPU cores, show for realistic examples in good cases between 4.7- and 7-fold speedup and in bad cases between 0.01- and to 0.5-fold slowdown.
+  The three artificial examples \texttt{Cube}, \texttt{Sphere} and \texttt{Helix} show up to \~20-, \~20- and \~0.9-fold speedup.
+  Preallocating memory with a circular buffer, on hardware from 2017, yielded up to 1.05-fold speedup on dense shapes or considerable losses on tube-like and forked structures.\par
+  We strongly emphasize the importance of publishing underlying code and comparison with standard benchmarks like "Yet Another Connected Components Labeling Benchmark"~\cite{allegretti2019}, since we could not reproduce past publications or estimate hardware improvements.\par
+From the benchmark results we expect up to 3.3-fold single-core performance increase, if the algorithm surface of any round fits into L3 cache.
+
+  Possible \textbf{future approaches} are manifold:
+  1. Current \ac{simpa} is missing a kernel-specific adaption to check, if the kernel freed all transfered threads.
+  This does not affect result correctness, but makes the evaluation cumbersome.
+  2. The data structure inside the algorithm queue of~\ac{srg} could be reduced to 1/3 size by the bijective relation of (x,y,z)-coordinates and the \texttt{data offset}.
+  3. An estimation of ideal speed from the optimal structure of valid voxel (an octahedron) is still to be done.
+  4. Increasing L3 cache to a size of 256MB for recent desktop CPUs should provide possibility to further increase the data size while keeping the processing time, but further measurements are necessary to evaluate this.
+  5. Experiments on the mitigation of cache-contention are still to be done.
+  This involves recognizing, if~\ac{srg} is executed inside one direction of a single tube-like structure.
+  The ideal solution of disabling cache coherence would require significant hardware changes.
+\end{abstract}
+\textbf{Structure of this work} The introduction begins with a motivation from a usage perspective (\Cref{subsec:problem}), followed by a description and formalization of the algorithm (\Cref{subsec:algo}) with upper memory bound computation and an overview of algorithmic effects given (\Cref{subsec:algeffects}).
+Thereafter related work (\Cref{subsec:relatedwork}) with shortcomings is discussed.
+Hereafter, we explain our methods (\Cref{sec:methods}), before discussing our benchmark examples (\Cref{sec:examples}).
+We continue with presenting the benchmarking results (\Cref{sec:benchmark}), discussion (\Cref{sec:discussion}) and finalize with summary and future work (\Cref{sec:summary_futurework}).\par
+\section{Introduction}\label{sec:intro}
+\acresetall
+
+%\printinunitsof{in}\prntlen{\textwidth}
+%\printinunitsof{in}\prntlen{\textheight}
+%width 6.69423in => 3.347115in
+%height 10.12in => 5.06in => 3/4in
+%relevance of seeded region growing
+
+\subsection{Usage of Seeded Region Growing}\label{subsec:problem}
+Medical image analysis is an essential part in early diagnostics of diseases and treatment and a market estimated by 2022 to be valued 3.9 billion \$\footnote{\url{https://www.marketsandmarkets.com/PressReleases/medical-image-analysis.asp}}.
+\Ac{srg} is commonly used as initial analysis step due to its simplicity and speed.\par
+As robust and easy-to-use routine, \Ac{srg} was first introduced by Adams and Bischoff.
+With~\Ac{srg}, higher level knowledge of the image composition can be incorporated through the decision of the chosen initial voxel (called seeding voxel).
+It is a standard method in image analysis for accurately identifying connected areas with the same or similar set of values or properties in a 3D scan.\par
+The difficulties of~\ac{srg}, as a reliable method, are a consequence of conflicting requirements in \textbf{medical objective}, \textbf{data size} and \textbf{short runtime}.
+\begin{enumerate}[noitemsep,nolistsep]
+  \item \textbf{Medical objective} Higher scan resolution leads to better results in detection and treatment.
+  \item \textbf{Data size} Doubling the scan precision of 3D scans multiplies the data by 8.
+  \item \textbf{Short runtime} When medical personal plans a treatment, it needs fast feedback about the area of interest (result of~\ac{srg}).
+\end{enumerate}
+The \textbf{medical objective} requires higher resolution, which increases \textbf{data size} and thus~\ac{srg} \textbf{runtime}.
+Higher runtime however means, that medical personal may not have fast enough feedback about the area of interest for clinical usability.\\
+\textit{Example}
+\begin{figure}[h!]
+\centering \vskip 0pt
+\begin{minipage}[t]{0.5\textwidth}%
+  \centering \vskip 0pt
+  \includegraphics[width=0.9\textwidth]{images/maus_mit_draht_unprocessed.png}
+  \subcaption{Unprocessed example.}\label{fig:mausmitdraht_unprocexa}
+\end{minipage}%
+\begin{minipage}[t]{0.5\textwidth}%
+  \centering \vskip 0pt
+  \includegraphics[width=0.9\textwidth]{images/maus_mit_draht_processed.png}
+  \subcaption{Processed example.}\label{fig:mausmitdraht_procexa}
+\end{minipage}%
+  \caption{Example: \texttt{Maus\_mit\_Draht}.}
+\end{figure}%
+
+When the user chooses the starting voxel of algorithm on the 3D-scan depicted in~\Cref{fig:mausmitdraht_unprocexa},
+~\ac{srg} should finish as fast as possible and return the area of interest shown in~\Cref{fig:mausmitdraht_procexa}.\par
+Further, the following constraints may apply:
+\begin{enumerate}[noitemsep,nolistsep]
+  \item \Ac{srg} requires to be run on non-consecutive elements and thus uses random memory access, but GPUs are optimized for batch processing.
+  \item Privacy restrictions and mobility requirements can make central processing not viable, so (high-end) GPU-acceleration may not be feasible.
+  \item Medical products require many quality reviews and documentation per line of code, so \textbf{minimality} is essential and GPU methods add another complexity burden.
+\end{enumerate}
+
+\subsection{Algorithm}\label{subsec:algo}
+\acresetall
+\Ac{srg} works on the assumption that the \textit{same type of neighboring cells have similar scan values}~\cite{1994adams}.
+It starts from possibly multiple seeding voxel and returns the connected area with similar scan values.\par
+Input data of~\ac{srg} may be preprocessed, for example with thresholding, to have whole numbers or binary states.
+Additionally processing steps can be done during execution of the algorithm.\par
+We exemplify the algorithm in~\Cref{alg:srg} and do a 2D simplification for demonstration in~\Cref{fig:srg2d}.
+Using this algorithm we explain in~\Cref{subsubsec:uppermembound} one worst case memory bound for cube-shaped input data.
+Memory bounds for other geometrical shapes can be found in a similar way.
+
+%algorithm2e
+\begin{center}
+\begin{algorithm}[H]
+ \DontPrintSemicolon
+ \caption{Seeded Region Growing by Adams and Bischoff.} \label{alg:srg}
+  \KwData{Vector \texttt{data} as voxel with values 0(invalid) or 1(valid)}
+  \KwResult{Vector \texttt{data} as voxel with values 0(invalid), 1(unmarked) and 255(marked)}
+ queue.push(seeding\_voxel; \tcp*{$(x,y,z)$}
+ \While{queue.empty() == false}{
+   first\_element = queue.front(); \tcp*{$(x,y,z)$}
+   queue.pop();\\
+   \ForAll{neighbors of first\_element }{
+     \tcp*{neighbor $(x\pm 1,y,z),(x,y\pm 1,z),(x,y,z\pm 1)$}
+     \If {neighbor $\in \text{cuboid}(x_\text{max},y_\text{max},z_\text{max})$} {
+     %$x_\mp \in [0,x_\text{max}], y_\mp \in [0,y_\text{max}], z_\mp \in [0,z_\text{max}]$} {
+       \tcc*{neighbor $(x,y,z)$ is in cuboid-shaped input data}
+       offset $= x_\text{max}*y_\text{max}*z+x_\text{max}*y+x$;\\
+       neighborValue = \texttt{data}[offset];\\
+       \If{neighborValue == 1}{
+         neighborValue = 255;\\
+         queue.push(neighbor);
+       }
+     }
+   }
+ }
+\end{algorithm}
+\end{center}
+\ac{srg} is typically applied on 3D cuboid-shaped (scan) data.
+A 3D cuboid-shaped (scan) dataset can be intersected as grid of identical volumes.
+One of those identical volumes is called voxel and has for simplicity the shape of a cube.
+Our version of~\ac{srg} distinguishes the input data as either invalid voxel (value 0) or valid voxel (value 1) and has the size of 1 Byte for each voxel.
+Output data can also contain marked voxel (value 255).
+Additionally we restrict the algorithm to only use one seeding voxel.
+The output values are of the same type aside of the valid voxel connected to the seeding voxel (direct or by indirect by other valid voxel), which are distinguished as being marked with value 255.\par
+\Cref{alg:srg} depicts~\ac{srg} by Adams and Schiff:
+First the initial seeding voxel is appended to the queue.
+Then the front element of the queue is removed and processed by checking all neighbors.
+If they are inside the cuboid-shaped data set and valid, they are marked and appended to the queue.
+This process is repeated until the queue is empty.\par
+\textit{Example of~\ac{srg} in 2D}
+\begin{figure}[h]
+\centering
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg1.pdf}
+  \caption{round 1\\queue:\cancel{(1,1)}}\label{fig:M1}%
+\end{subfigure}%a)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg2.pdf}
+  \caption{round 1\\queue:}\label{fig:M2}%
+\end{subfigure}%b)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg3.pdf}
+  \caption{round 1\\queue:}\label{fig:M3}%
+\end{subfigure}%c)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg4.pdf}
+  \caption{round 1\\queue:(2,3)}\label{fig:M4}%
+\end{subfigure}%d)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg5.pdf}
+  \caption{round 1\\queue:(2,3),(3,2)}\label{fig:M5}%
+\end{subfigure}\\%e)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg6.pdf}
+  \caption{round 2\\queue:\cancel{(2,3)},(3,2)}\label{fig:M6}%
+\end{subfigure}%f)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg7.pdf}
+\caption{round 2\\queue:(3,2)}\label{fig:M7}%
+\end{subfigure}%g)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg8.pdf}
+\caption{round 2\\queue:(3,2)}\label{fig:M8}%
+\end{subfigure}%h)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg9.pdf}
+  \caption{round 2\\queue:(3,2),(3,3)}\label{fig:M9}%
+\end{subfigure}%i)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg10.pdf}
+  \caption{round 2\\queue:\cancel{(3,2)},(3,3)}\label{fig:M10}%
+\end{subfigure}\\%j)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg11.pdf}
+\caption{round 2\\queue:(3,3)}\label{fig:M11}%
+\end{subfigure}%k)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg12.pdf}
+  \caption{round 3\\queue:\cancel{(3,3)}}\label{fig:M12}%
+\end{subfigure}%l)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg13.pdf}
+\caption{round 3\\queue:}\label{fig:M13}%
+\end{subfigure}%m)
+\begin{subfigure}[b]{0.2\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/srg14.pdf}
+\caption{round 3\\queue:}\label{fig:M14}%
+\end{subfigure}%n)
+\caption{Seeded Region Growing by Adams simplified in 2D: Red-bordered cells define the cause of the current operation, cells labelled by ? the processing on the cell and red solid cells the marking of a cell.
+White cells are invalid cells (never to be marked by the algorithm), lightgray cells are (not yet marked) valid cells and gray cells are marked valid cells.} \label{fig:srg2d}
+\end{figure}
+
+In~\Cref{fig:srg2d}, the application of~\ac{srg} in 2D is shown.
+The initial cell is processed in~\Cref{fig:M1}:
+If the processed cell is a valid cell (gray), it is marked (black) and appended to the algorithm-queue.
+The queue contains the neighboring cells for later processing.
+The initial cell is thus marked and a processing round 1 begins.
+The reason for using rounds is to compute upper memory bounds, as shown later in~\Cref{subsubsec:uppermembound}.
+Now the coordinates of the initial cell are removed from the queue to process all 4 neighbors (for 2D) in~\Cref{fig:M2,fig:M3,fig:M4,fig:M5}.
+Cells in~\Cref{fig:M2,fig:M3} are only checked for valid voxel, whereas~\Cref{fig:M4,fig:M5} influence the queue by existence of a valid voxel.
+After~\Cref{fig:M5} all neighbors affected by the initial element in the queue were processed.
+Thus round 2 begins.
+In~\Cref{fig:M6,fig:M7,fig:M8,fig:M9} the neighbors of the top left cell of the resulting square are processed and in~\Cref{fig:M10,fig:M11} the neighbors of the bottom right cell of the square are processed.
+\Cref{fig:M12,fig:M13} show the third round of processing with no further changes for the result in~\Cref{fig:M14}.
+\subsubsection{Upper memory bound of Seeded Region Growing}\label{subsubsec:uppermembound}
+%Since we did not find publications that explain memory bounds of~\ac{srg}, we explain how to derive them here.\par
+In a worst-case memory situation for~\ac{srg}
+\begin{enumerate}[noitemsep,nolistsep]
+  \item all voxel are \textbf{valid},
+  \item and the geometry supports the \textbf{maximum surface} of~\ac{srg} in each round.
+\end{enumerate}
+This worst case for a cube is an octahedron in voxel-representation shown in~\Cref{fig:octahedron} and the reason is the following:
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}[b]{0.275\linewidth}%a)
+\centering
+  \includegraphics[width=0.9\linewidth]{figures/srg3d1.pdf}
+  \caption{round $n=1$.}\label{fig:srg3d1}%
+\end{subfigure}%
+\begin{subfigure}[b]{0.275\linewidth}%a)
+\centering
+  \includegraphics[width=0.9\linewidth]{figures/srg3d2.pdf}
+  \caption{round $n=2$.}\label{fig:srg3d2}%
+\end{subfigure}%
+\begin{subfigure}[b]{0.45\linewidth}%a)
+\centering
+  \includegraphics[trim=13.5cm 6.8cm 13.5cm 5cm, clip, width=0.5\linewidth]{algorithm_visualisation/srgsteps/srgstep45.png}
+  \caption{round $n=46$, octahedron in voxel-representation.}\label{fig:octahedron}%
+\end{subfigure}%
+  \caption{\acl{srg}: View from top onto $(z=0)$-plane of xy-axes. In red are the cells in $z=0$ shown, in lightgray the cells for $z>0$. The right graphic is a 3D visualization of the resulting shape.}
+\end{figure}\label{fig:memorybound}
+
+\Cref{fig:srg3d1} shows the voxel to be marked and appended to the queue in round 1.
+This includes the 4 outer voxel of the $(z=0)$-plane, which are red and which positions are $(2,3,0),(3,2,0),(3,5,0),(5,3,0)$.
+The upper part in gray is seen from above for $z=1$ and the lower part $z=-1$ is analogous with positions $(3,3,-1)$ and $(3,3,1)$.
+The voxel in position $(3,3,-1)$ and $(3,3,1)$ are also appended to the queue round 1.
+In the next round ($n=2$) we see again in red the elements to be appended in the $z$-plane and the upper part contains combined cells of all the steps with $z>0$ before and appended to the queue.
+Analogously, the lower part (below the $z$-plane) is defined and appended to the queue.\par
+
+In the following, we define this behavior in an recursive manner to compute the number of surface voxel for every round.
+The surface of the queue in the $z$-plane in the $n$-th round is defined as
+\begin{align}
+  O_n^{z-plane} = \begin{cases}
+    4n, &n>0\\
+    1,  &n=0
+  \end{cases}\label{eq:zplane}
+\end{align}
+The voxel above the $(z=0)$-plane in the $n-$th round are defined by $O_n^{upper} = \underbrace{(\sum_{i=1}^{n-1} 4*i)}_{=2n^2-2n} + \underbrace{(O_0^{z-plane})}_{= 1} = 2n^2 -2n +1$ and so we get
+\begin{align}
+  O_n^{upper} =
+    \begin{cases} 2n^2 -2n +1, &n>0 \\
+                            0, &n=0
+    \end{cases}\label{eq:upper}
+\end{align}
+The total surface in the $n-th$ round is given as $O_n^{SRG} = O_n^{z-plane} + 2*O_n^{upper} = 2*(2n^2 -2n +1) + 4n = 4n^2 + 2$
+\begin{align}
+  O_n^{SRG} = \begin{cases}
+    4n^2 + 2, &n>0 \\
+           1, &n=0
+  \end{cases}\label{eq:total}
+\end{align}
+By choosing the seeding voxel to be in the mid of any dimension, we obtain the worst memory need.
+This means that any boundary of a cube is reachable after $n=\floor{\frac{a}{2}}$ round, where $a$ defines the edge length of the cube $(x,y \text{ and } z)$.
+\Ac{srg} with cube-shaped input data has thus at worst a memory need of
+\begin{align}
+  O^\text{max}_n = \begin{cases}
+    a^2+2, &a \text{ even}\\
+    (a-1)^2+2, &a \text{ odd}
+  \end{cases}\label{eq:octahedron}
+\end{align}
+Computing memory bounds for other shapes of input data is possible in the same manner.
+In~\Cref{subsubsec:cacheeffects} we estimate consequences of upper memory bound for cache usage.
+
+\subsection{Algorithmic effects}\label{subsec:algeffects}
+In this section we introduce briefly the two biggest problems during parallelization of~\ac{srg}: Memory access delay and cache-contention between CPU cores.
+Effects from cache replacement~\cite{vila2020} and out-of-order strategies~\cite{alipour2017} are not examined due to complexity.
+Memory access delay applies to the single-core and parallelized~\ac{srg}.
+%leaving out TLB and MMU (not important)
+
+\subsubsection{Memory access delay}\label{subsubsec:cacheeffects}
+The fundamental performance bottleneck of~\ac{srg} is that it runs out of L3 cache due to the increasing surface of the data operated on by~\ac{srg}.
+This section shortly elaborates necessary technical background with numbers on caching.
+\Ac{mad} is the time delay of accessing data for modification in a CPU core. 
+We ignore potential delays from port contention for simplicity.
+Port contention appears when memory is in register and instructions are pending, but operations on it must be delayed due to available execution units of the CPU core being busy.
+\Ac{mad} is the result of limited, near-light-speed electron movement and space requirements due to heat dissipation of memory cells.
+The electron movements limits the available distance to the core and the heat dissipation of memory-read and writes on memory cells density of memory cells.
+Typically \Ac{mad} ranges at $0.5-100$\ac{ns} scale, whereas the processing of CPU registers happens at \ac{ns} or sub-\ac{ns} scale.\par
+The purpose of CPU cache(special memory cells) is to lower~\ac{mad} and its usage is called caching.
+%When the CPU is waiting for the needed memory to be in the CPU register, it is wasting energy and doing 
+Typically CPU caches are L1, L2 and L3 cache and have, as of 2020 on common desktop CPUs, sizes of L$1=64$KB per core, L$2=512$KB per core and L$3=32$MB shared.
+The~\ac{mad}, as of 2020, is \textasciitilde $0.5$\ac{ns} for a L$1$ cache hit, \textasciitilde $3-4$\ac{ns} for a L$2$ cache hit, \textasciitilde $19$\ac{ns} for a L$3$ cache hit and \textasciitilde $100$\ac{ns} for
+RAM access\footnote{\url{https://github.com/karlrupp/microprocessor-trend-data}},\footnote{\url{https://stackoverflow.com/questions/4087280/approximate-cost-to-access-various-caches-and-main-memory/33065382\#33065382}}.
+For comparison: a multiplication takes \textasciitilde $1$\ac{ns} to execute.
+Cache lines, as minimal cache memory unit, are of size 64 Byte.
+\par
+Cache memory is filled by an architecture-specific hardware prefetcher and/or software command to load data as cache lines into the according cache, before it is loaded into registers for execution.
+The hardware prefetcher uses a trainable metric to decide based on memory access patterns and instruction pipeline, what memory should be loaded to which cache and when.
+It also uses a hardware-specific cache replacement strategy to decide, which cache elements to replace.
+Architecture-specific software prefetch instructions use space in the instruction pipeline of the processor and may have an immediate effect.
+Prefetch instructions can however be merely hints for the processor core and their behavior is often implementation-dependent.\par
+\textbf{Estimation of optimal data input size}
+For simplicity, we assume effects from bad cache evictions and bad prefetech instructions to be negligible.
+For architecture generality, we assume no cache overhead for cache management, but the reader may refer to the CPU architecture design and literature~\cite{patterson2013} for a broad estimation.
+Additionally, we ignore cache usage from other processes on the system, which can be scheduled by the Kernel during execution of~\ac{srg}.
+We simplify up to 3 consecutive voxel values to always be on one cache line (of length 64 Byte) to ease the computation, but the reader may use probabilities to have a more accurate estimation.
+Further, for simplicity we ignore that the voxel near the tips of the octahedron (minimum and maximum of $y$- and $z$-coordinates) have overlapping cache lines.\par
+As shown in~\Cref{eq:total}, \ac{srg} has after every $n$-th processing round at most $4n^2+2$ voxel in the queue.
+The algorithm queue contains 3-dimensional coordinates $(x,y,z)$ of integers with length 32 bit, which are in total 12 Byte.
+The surface changes from the $n$-th to $n+1$-th step by $(4(n+1)^2+2-(4n^2+2)=2n+1\approx 2n$.
+In total, we get the queue voxel with size 12 Bytes and 2 times the cache line size of 64 Byte ($12+2*64 = 12+128 = 140$ Byte) per surface voxel in L3 cache.
+Hence we expect a performance drop on a voxel surface greater than $\frac{\text{L3 cache size}}{\text{memory per Voxel}}=\frac{32\text{MB}}{140\text{B}} = 239\_674 \approx 489^2$.
+This refers to a side length $a = 489$ of a cube.
+We hint, that this estimation is too optimistic as shown in the benchmark results (\Cref{fig:cubesphere}).
+
+\subsubsection{Cache-contention}\label{subsubsec:datacontentionthreads}
+%memory is on default synchronised between CPU cores for data consistency
+%Depending on the CPU architectures one can disable this and manually synchronise data
+We describe only recent CPU variants with multilevel caches and simplify the description.
+Different CPU cores may have copies of the same cache line.
+Cache coherence ensures that 1. changes on a cache line are propagated to all copies of the cache line and 2. reads or writes must be seen by all cores in the same order.
+To ensure both, cache coherency protocols are used as hardware components.
+For smaller amounts of CPU cores, all data requests of each single CPU core is broadcast to all CPU cores with according responses, which is called bus snooping.
+Bigger number of CPU cores demand tracking of shared cache lines in a centralized place with point-to-point requests between processors, which is called directory-based coherence.
+For simplification, we omit explaining consequences and refer to an evaluation~\cite{al-manasia2015}.
+\par
+As of 2020, cache coherence is hardware based and thus can not be disabled on widely used architectures from Intel, AMD and ARM.
+However Adhi et al. showed that, on usage of compiler techniques, one can even improve performance with software based cache coherency~\cite{adhi2019}.
+We reason in future work (\Cref{sec:summary_futurework}), why we are skeptical about disabling cache coherence for~\ac{srg}.
+
+\textbf{Cache-contention between CPU cores} refers to multiple cores competing for read or write access to data on copies of the same cache line.
+When a cache line of one CPU core changes, the change needs to be propagated to all its copies.
+In the following we will exemplify this behavior.
+\begin{figure}[h]
+\centering
+\begin{subfigure}[b]{0.5\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/datacont2.pdf}
+  \caption{Ideal case of 2 CPU cores.}\label{fig:idealcase}%
+  %\caption{round 1\\queue:\cancel{(1,1)}}\label{fig:M1}%
+\end{subfigure}%b)
+\begin{subfigure}[b]{0.5\linewidth}%
+\centering
+  \includegraphics[width=0.6\linewidth]{figures/datacont1.pdf}
+  \caption{Cache-contention of 2 CPU cores.}\label{fig:datacontention}%
+\end{subfigure}%a)
+  \caption{\acl{srg} on tube in 2D: Two cores with and without cache-contention. Core A in bright blue and core B in cyan with annotated processing round on each voxel. The blue margins mark the voxel in a simplified cache line size of 4 Byte.} \label{fig:datacontention_overview}
+\end{figure}\par
+In the ideal case of~\ac{srg}, both cores work during the complete execution on distinct cache lines as depicted in~\Cref{fig:idealcase}.
+The execution rounds of~\ac{srg} are shown from 0 to 4.
+Only in round 4 and 5 are the cache lines, which are sill in the cache of the other core, loaded. However they are not written.\par
+In contrast to that is the contention case in~\Cref{fig:datacontention}.
+We discuss its behavior with a time sequence in~\Cref{fig:sequence_contention}.
+\begin{figure}[h]
+  \centering \vskip 0pt
+\begin{tabular}{lcc}
+  \textbf{round 0} & \includegraphics[width=.3\linewidth]{figures/datacontAbad2.pdf} & \includegraphics[width=.3\linewidth]{figures/datacontBbad2.pdf}\\
+  \textbf{round 1} & \includegraphics[width=.3\linewidth]{figures/datacontAbad3.pdf} & \includegraphics[width=.3\linewidth]{figures/datacontBbad3.pdf}\\
+  \textbf{round 2} & \includegraphics[width=.3\linewidth]{figures/datacontAbad4.pdf} & \includegraphics[width=.3\linewidth]{figures/datacontBbad4.pdf}\\
+  \textbf{round 3} & \includegraphics[width=.3\linewidth]{figures/datacontAbad5.pdf} & \includegraphics[width=.3\linewidth]{figures/datacontBbad5.pdf}\\
+  \textbf{round 4} & \includegraphics[width=.3\linewidth]{figures/datacontAbad6.pdf} & \includegraphics[width=.3\linewidth]{figures/datacontBbad6.pdf}\\
+  & Core A & Core B
+\end{tabular}
+  \caption{Cache-contention: Time sequence of two cores A and B. Blue margins show data not loaded in cache of core and red show data in cache. Bright gray are valid voxel, dark gray are marked voxel.}\label{fig:sequence_contention}
+\end{figure}
+In the initial step both cores load the cache line and process the seeding voxel 0.
+In round 1 the processed voxel is on the same cache line of the respective core.
+Thereafter in round 2, for core A the voxel above and for core B the voxel below the seeding voxel needs to be processed.
+Therefore both cores must have the upper and lower cache lines in their memory.
+During this round, no further changes happen.
+In round 2 both cores need to forward their operations on the now shared cache lines.
+If core A can not process non-shared cache lines in the meantime, it may only try to continue its algorithm on the available cache lines.
+However, core B does process on the other shared cache line and all changes of core A to it must be reversed, since core B was earlier in time writing to it.\par
+Either way, the synchronisation delay stalls both cores and this behavior is depicted in dark red.
+This behavior continues as shown in round 5 and the visualisation to round 7 is omitted.
+One simple way to remove cache-contention is to let threads operate in distinct areas (like on distinct input data).
+However this adds its own class of problems, as sketched in the next subsection on \textbf{supervoxel-based region growing}.
+
+\subsection{Related Work}\label{subsec:relatedwork}
+The most recent and comparable work is by Park et al~\cite{2014park}.
+They used the framework CUDA to parallelize \acl{srg} on a NVIDIA GeForce GTX 285 GPU with 1 GB memory and 240 cores (shader units).
+Besides~\ac{srg}, they included an additional thresholding step and did not measure the steps individually.
+Their test examples \textbf{Cube, Cylinder and Sphere scaled linear with the segmented-region size} and the three plots look very identical.
+The voxel writing speed ($\frac{\text{total number of voxel written by~\ac{srg}}}{\text{total needed time}}$) with unit $\frac{\texttt{voxel}}{\mu s}$, written as (single-core, quad-core), are for the \texttt{Cube} (0.7,2.6), for the \texttt{Cylinder} (0.7,2.6) and for the \texttt{Sphere} (0.7,2.6)\footnote{We have \textbf{different results} in~\Cref{subsec:artiexamples} with a decreasing count of voxel per time as the size increases for \textbf{both the Cube and the Sphere}.}.
+Additionally they reached a 32-fold speedup in the mean for a lung example and $5.7$-fold in the mean for a colon example.\par
+Lorentzen investigated data structures for priority queue representations in~\ac{rbrg}, which enable noise-filtering and (partially) absence of processing-dependency of multiple-regions~\cite{2011lorentzen}.
+He explains some effects of queues on the algorithm behavior, but misses parallelization effects like cache-contention of threads (see~\Cref{fig:datacontention}).
+He also found linear processing time by number of voxel, but for examples that are difficult to compare.\par
+In~\ac{rbrg}~\cite{bailey1991} the input data is scanned in raster fashion and for each valid data a new slightly adapted~\ac{srg} is started.
+The adapted~\ac{srg} marks the input data with a unique label for marking valid voxel and tracks, if labeled regions need to be merged, in a table.
+The big disadvantage is that for visualisation the labeled data connected to the same region needs to be reprocessed and that we can choose too many too close seeding voxel.
+Hence this method is \textbf{unfeasible to our short runtime requirement} in~\Cref{subsec:problem}.\par
+A related method to~\ac{rbrg} is~\ac{sbrg}~\cite{dong2020}.
+On~\ac{sbrg} the unprocessed input data is split into evenly sized cuboid-shaped areas (called supervoxel) for parallel processing.
+This enables reliable cache-size optimizations, because one can pre-compute the necessary memory of the worst case similar to the method in~\Cref{subsubsec:uppermembound}.
+When connected regions of valid voxel span multiple supervoxel, the table for merging becomes bigger.
+Either the boundaries of each two surface voxel by all neighboring supervoxel need to be checked, or a table, which voxel from the neighboring supervoxel to check, can be used.\\
+\textit{Example} Take a tube-like or forked structure spanning multiple sections.
+Each cuboid contains a subpart of a structure to be merged after the parallel processing.
+Having multiple of these structures prolongs the post-processing.
+On top of that, one may need additional memory besides the usual 1 Byte for voxel values.
+The reason for that is, that we need to save the label inside the voxel values and we might have more than 253 objects inside the input data.
+This is \textbf{conflicting with the requirement of being in-place} as shown in~\Cref{sec:methods}.\par
+Later approaches focus on automatized and simplified extraction of seeding voxel~\cite{2018melouah}, which are not focus of this work.\par
+\Ac{ccl} is a related method commonly used for 2D image processing.
+It is designed to group connected pixels, which share similar RGB-values.
+Thus in 3D it additionally extracts the different groups for value ranges.\par
+For~\ac{ccl} exists a common benchmark called "Yet Another Connected Components Labeling Benchmark", which however only includes real 3D datasets of $(256\times 256\times 128)$ size\footnote{https://github.com/prittt/YACCLAB/blob/master/README.md}.\par
+To our knowledge the fastest algorithm for~\ac{ccl} in 2D is from Fu et al~\cite{2017he}.
+It goes in a linear fashion through all pixels and saves the position for backtracking, when it encounters a contour.
+The contour is then processed clock- or anti-clockwise and the algorithm resumes on the backtracking-point~\cite{2004chang}.
+Optimal algorithmic processing strategies for~\ac{ccl} of 3D images and parallelization of these remain an unanswered question.
+Approaches appear to be either explicit or case-based rasterization~\cite{2017he}.\par
+
+\section{Methods}\label{sec:methods}
+\acresetall
+The objective of this work was to find an algorithm for CPUs,
+which is~\textbf{in-place} (reserves only memory in the size magnitude of the scan data),
+~\textbf{parallelized} and~\textbf{robust} (good performance on worst-case examples).
+The idea for the parallelizations is that each CPU core works completely independent and regularly checks (all 1000 successful written voxel), if all cores are used.
+If this is not the case, the algorithms start their respective routine on a unused core with a new seeding voxel.
+Hence the tested algorithms only differ in strategy to choose the new seeding voxel.
+Attempts to save the orientation of the previous step as separate variable or as bitmask inside the voxel values were much slower and are thus not further discussed.\par
+The first implementation (\texttt{simpaSRG\_RAY.cpp}) uses a minimum offset into x-,y- or z-direction for starting~\ac{srg} on a free core. 
+The second implementation (\texttt{simpaSRG\_ERC.cpp}) uses the minimal offset into x-,y- or z-direction and a heuristic for the optimal distance to start~\ac{srg} on a free core.
+The third implementation (\texttt{simpaSRG\_NAIVE.cpp} shown in \Cref{alg:srgpar}) tries to start~\ac{srg} on the 1000th valid voxel and skips it on success. 
+On failure of starting a new core, the voxel is marked and the algorithm continues.
+
+%algorithm2e
+\SetKwProg{Fn}{Function}{}{end}
+\SetKwFunction{FnWatcher}{FnWatcherThread}%
+\SetKwFunction{FnWorker}{FnWorkerThread}%
+\SetKwFunction{Deactivate}{DeactivateCurrentThread}%
+\SetAlgoLongEnd
+\begin{center}
+\begin{algorithm}[H]
+  \DontPrintSemicolon
+  \caption{\acf{simpa}} \label{alg:srgpar}
+  \KwData{Vector \texttt{data} as voxel with values 0(invalid) or 1(valid)}
+  \KwResult{Vector \texttt{data} as voxel with values 0(invalid), 1(unmarked) and 255(marked)}
+  %\Fn(\tcc*[h]{algorithm as a recursive function}){\FRecurs{some args}}{
+  \Fn(){\FnWatcher{seedvoxel,data,$\ldots$}}{
+    read\_data\_from\_disk();\\
+    start \FnWorker() in new thread;\\
+    \While{AnyWorkerThread.running == true}{
+      sleep\_for\_100milliseconds;
+    }
+    save\_data\_to\_disk;
+  }
+  \Fn(){\FnWorker{seedvoxel,data,$\ldots$}}{
+    queue.push(seeding\_voxel); \tcp*{coordinates $(x,y,z)$}
+    countdown = 1000;\\
+    \While{queue.empty() == false}{
+      first\_element =  queue.front(); \tcp*{$(x,y,z)$}
+      queue.pop();\\
+      \ForAll{neighbors of first\_element}{
+        \tcc*{neighbor $\in \{(x\pm 1,y,z),(x,y\pm 1,z),(x,y,z\pm 1)\}$}
+        \If {neighbor $\in \text{cuboid}(x_\text{max}, y_\text{max}, z_\text{max})$} {
+          \tcc*{neighbor $(x,y,z)$ is in cuboid-shaped input data}
+          offset $= x_\text{max}*y_\text{max}*z+x_\text{max}*y+x$;\\
+          neighborValue = \texttt{data}[offset];\\
+          \If{neighborValue == 1}{
+            \eIf{countdown == 0}{
+              countdown = 1000;\\
+              \If{try\_to\_start\_\FnWorker() == failure}{
+                neighborValue = 255;\\
+                queue.push(neighbor);\\
+                countdown = countdown-1;
+              }
+            }%else
+            {
+              neighborValue = 255;\\
+              queue.push(neighbor);\\
+              countdown = countdown-1;
+            }
+          }
+        }
+      }
+    }
+    \Deactivate();
+  }
+  %
+\end{algorithm}
+\end{center}
+The essential structure of \texttt{simpaSRG\_NAIVE.cpp} is depicted in~\Cref{alg:srgpar}.
+Data input and result are the same as in~\ac{srg} (\Cref{alg:srg}), but we now have two logical control flows: \texttt{FnWatcherThread} and \texttt{FnWorkerThread}.
+\texttt{FnWatcherThread} loads the unprocessed data and starts one \texttt{FnWorkerThread}.
+Then it checks every 100 milliseconds, if \texttt{FnWorkerThread} and the subsequent other \texttt{FnWorkerThread} are finished.
+Finally the thread saves the processed data to disk.
+\par
+\texttt{FnWorkerThread} has the same functionality as~\ac{srg}, but tries every 1000 voxel markings to start a new \texttt{FnWorkerThread}.
+This succeeds, if a physical or hyper-threaded core is still unused.
+If it succeeds, the newly created \texttt{FnWorkerThread} contains only the unmarked seed in the queue to perform the adapted~\ac{srg}.
+If it does not succeed, \texttt{FnWorkerThread} continues until no more elements to mark are found.
+If no more elements for marking are found, \texttt{FnWorkerThread} adjusts control elements and terminates itself, so that the physical or hyper-threaded core can be reused.
+
+\subsection{Additional experiments}\label{subsec:addexperiments}
+An implementation of a circular buffer was written to measure the time impact of memory allocations and usability for~\ac{srg} (implemented in \texttt{ringbuffer.hpp}).
+A circular buffer is a static data structure, which elements behave like a circle on continuous data.
+First the circle is filled from a starting address.
+When the last element is full and an element needs to be written, the start gets overwritten and the cycle starts again.
+The behavior for reading and deleting is accordingly in reverse direction.
+Conversely on reading and deleting the first element, the last elements is read and deleted.
+Therefore a small efficient implementation, which rounds up the buffer capacity $2^n, n<\text{length}(\texttt{int32}) = 32$ for bitmasks, was created.
+We can use this structure, but only for data sets with $\text{length}(x)=\text{length}(y)=\text{length}(z)$, due to the explicit memory bound in~\Cref{eq:octahedron}.
+
+\section{Examples for benchmark}\label{sec:examples}
+%create examples 800,400,200 sizes + real examples
+%left before segmentation, right after segmentation
+In this section we describe the used examples for the benchmarks and why they were chosen.
+In total we analysed 5 real examples and artificial examples \texttt{Spheres} and \texttt{Cubes} of 3 sizes and \texttt{Helixes} with 3 sizes and dilation of 1 to 5 (for \texttt{Helixes} only).
+The three sizes for the artificial data in \texttt{Cube}, \texttt{Sphere} and \texttt{Helix} are $8*10^6$, $64*10^6$ and $512*10^6$, which were generated by doubling the edge length of the cube-shaped input-data as 200, 400 and 800.
+We omit the presentation of examples \texttt{Sphere} and \texttt{Cube}, which exist as reference points for optimal results.
+\begin{figure}[h]
+\centering
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+  \vskip 0pt
+    \includegraphics[width=0.7\textwidth]{images/helixd1_800.png}
+    \caption{3D visualization with dilation $d=1$.}\label{fig:helixd1_800}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+  \vskip 0pt
+    \includegraphics[width=0.7\textwidth]{images/helixd4_800.png}
+    \caption{3D visualization with dilation $d=4$.}\label{fig:helixd4_800}
+  \end{subfigure}%
+  \caption{Example \texttt{Helix} within data set of size $800\times 800\times 800$.}\label{fig:helixes}%
+\end{figure}
+In~\Cref{fig:helixes} the dilation growth of 2 \texttt{Helix} examples is shown.
+Both \texttt{Helixes} grow into z-direction (to the right) on the xy-plane.
+They were created by repetitive testing and have a continuous path for~\ac{srg}.
+The dilation was applied by a cube on the path formula
+\begin{align}
+  p(i) = \begin{pmatrix}
+    r * \cos (\frac{56*i}{s^3}) + \frac{s}{2} \\
+    r * \sin (\frac{56*i}{s^3}) + \frac{s}{2} \\
+    \frac{i}{s^2} + \frac{s}{4}
+  \end{pmatrix}, i \in [0,\frac{s^3}{2}], s=\text{edgesize}
+\end{align}
+The purpose of the Helix examples is to analyse cache-contention on the parallelized~\ac{srg}.
+\begin{figure}[h!]
+\centering \vskip 0pt
+\begin{minipage}[b]{0.5\textwidth}%
+  \centering \vskip 0pt
+  \begin{minipage}[b]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.7\textwidth]{images/bonemaskhigh_slice_unprocessed.png}
+    \subcaption{Structure of \texttt{BoneMaskHigh} shown as 3D slice.}\label{fig:bonemaskhigh_slice}
+  \end{minipage}
+  \\
+  \begin{minipage}[b]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.7\textwidth]{images/head_of_mouse_slice_unprocessed.png}
+    \subcaption{Structure of \texttt{Head\_of\_mouse} shown as 3D slice.}\label{fig:headofmouse_slice}
+  \end{minipage}%
+\end{minipage}%
+\begin{minipage}[b]{0.5\textwidth}%
+  \centering \vskip 0pt
+  \begin{minipage}[b]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.7\textwidth]{images/bonemaskhigh_unprocessed.png}
+    \subcaption{3D visualization of \texttt{BoneMaskHigh}.}\label{fig:bonemaskhigh3d}
+  \end{minipage}
+  \\
+  \begin{minipage}[b]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.7\textwidth]{images/head_of_mouse_unprocessed.png}
+    \subcaption{3D visualization of \texttt{Head\_of\_mouse}.}\label{fig:headofmouse3d}
+  \end{minipage}%
+\end{minipage}%
+  \caption{Structure as 2D-slice and 3D visualization.}\label{fig:real1}
+\end{figure}
+\Cref{fig:real1} shows two real data 3D scans: one very narrow and ramified (\Cref{fig:bonemaskhigh_slice}) and one wide and coarse (\Cref{fig:headofmouse_slice}).
+The slice of~\texttt{BoneMaskHigh} shows that the structures has few regularities inside and is a thicker outside. This is not visible from the 3D visualization in~\Cref{fig:bonemaskhigh3d}.
+In contrast to that is~\texttt{Head\_of\_mouse}, which has a coherent inner structure shown in~\Cref{fig:headofmouse_slice}.
+However the outer structure of the 3D visualization in ~\Cref{fig:headofmouse3d} is hard to estimate from the slice.
+The purpose of both is to measure the usefulness of the algorithm on big datasets of narrow structure without cache-contention.
+
+\begin{figure}[h!]
+\centering \vskip 0pt
+\begin{minipage}[t]{0.5\textwidth}%
+  \centering \vskip 0pt
+  \begin{minipage}[t]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.9\textwidth]{images/maus_mit_draht_unprocessed.png}
+    \subcaption{Unprocessed \texttt{Maus\_mit\_Draht}.}\label{fig:mausmitdraht_unproc}
+  \end{minipage}%
+  \\
+  \begin{minipage}[t]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.9\textwidth]{images/skeleton_unprocessed.png}
+    \subcaption{Unprocessed \texttt{Skeleton}.}\label{fig:skeleton_unproc}
+  \end{minipage}%
+\end{minipage}%
+\begin{minipage}[t]{0.5\textwidth}%
+  \centering \vskip 0pt
+  \begin{minipage}[t]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.9\textwidth]{images/maus_mit_draht_processed.png}
+    \subcaption{Processed \texttt{Maus\_mit\_Draht}.}\label{fig:mausmitdraht_proc}
+  \end{minipage}%
+  \\
+  \begin{minipage}[t]{\textwidth}%
+    \centering \vskip 0pt
+    \includegraphics[width=0.9\textwidth]{images/skeleton_processed.png}
+    \subcaption{Processed \texttt{Skeleton}.}\label{fig:skeleton_proc}
+  \end{minipage}%
+\end{minipage}%
+\caption{3D visualization before and after processing with~\ac{srg}.}\label{fig:real2}
+\end{figure}
+
+In~\Cref{fig:real2} the real examples with notable changes by~\ac{srg} are depicted. 
+The unprocessed \texttt{Maus\_mit\_Draht} has both front arms (\Cref{fig:mausmitdraht_unproc}), while one arm is missing in the processed example (\Cref{fig:mausmitdraht_proc}).
+The purpose of this example is to show a more realistic example for cache-contention between cores. 
+This was done by including a wire with right angles below the mouse. The size of the example is much bigger in contrast to~\Cref{fig:skeleton_unproc}, but unintentionally the thoraic skeleton (lung part) may lead to less accurate results.
+
+Processing example \texttt{Skeleton} removes random noise, the lung, the urinary bladder and the arms with shoulder part shown in~\Cref{fig:skeleton_unproc} and~\Cref{fig:skeleton_proc}.
+It is an example for cache-contention of cores by natural structures, here mostly influenced by the thoraic skeleton (lung part).
+
+\section{Benchmark results}\label{sec:benchmark}
+Preliminary benchmarks were performed on a laptop with Intel Core i5-8265U 1.6Ghz-3.7Ghz (released 2018) with 256KB L1(L1I: 4 $\times$ 32KB/core, L1D: $4\times 32$KB/core), 1MB L2($4 \times 256$KB/core), 6MB L3($4 \times 1.5$MB) shared cache, 16 GB DDR4-2400 and with 4 physical, 4 hyper-threaded cores, but are sketched due to space limitations.\par
+Main benchmarks were performed on the RWTH cluster on a Platinum 8160 (released 2017) 2.1Ghz-3.7Ghz with 1.5MB L1(L1I: 32KB/core, L1D: 32KB/core), 24MB L2(24cores with each 1MB/core), 33MB shared L3 cache, 16GB DDR4-2666 and 24 cores.\par
+Each example instance was run 40 times per program configuration and from the resulting data the average was taken.
+For~\ac{simpa} 24 program configurations per example exist for 1 to 24 threads.
+\Ac{srg} has only 1 program configuration per example instance, since it is single-threaded.
+It should be noted, that multiple example instances are possible:
+For example, \texttt{Helix} has 5 different dilation sizes (1-5 voxel) and 3 different sizes (200, 400 or 800 edge length of data input cube).\par
+We describe shortly our findings on preliminary benchmarks, before we describe the main results. 
+The main benchmarks were conducted on artificial and realistic examples with \ac{simpa}, shown in~\Cref{alg:srgpar}, and~\ac{srg}, shown in~\Cref{alg:srg}.\par
+The speedup is defined as $\frac{\texttt{time of single-threaded algorithm}}{\texttt{time of multi-threaded algorithm}} = \frac{\text{time of }\ac{srg}}{\text{time of }\ac{simpa}}$. 
+We annotate numbers in seconds like the number 10 as $\mathbf{10s}$ and speedups like a 10-fold speedup as $\mathbf{10x}$ speedup. 
+Further we use the \textbf{mathematical notation} of 1e6 = $1*10^6$ for numbers.
+We define the \textbf{voxel writing speed} as $\frac{\text{total number of voxel written by algorithm}}{\text{total needed time}}$.
+Also we indicate with \textbf{1-threaded algorithm}, that the algorithm was run with 1 thread.
+
+\subsection{Preliminary benchmarks}\label{subsec:prelbench}
+On average \texttt{simpaSRG\_RAY.cpp} and \texttt{simpaSRG\_ERC.cpp} (see \Cref{sec:methods}) took up to twice the amount of time compared to \texttt{simpaSRG\_NAIVE.cpp} (\Cref{alg:srgpar}) with the according amount of threads and were \textbf{never faster than the naive parallelization approach}.
+Hence we write~\ac{simpa} instead of \texttt{simpaSRG\_NAIVE.cpp} in further results, as the algorithm was used for the main benchmarks.\par
+Testing the circular buffer for the naive approach showed on average $1.05-1.10\times$ speedups for \texttt{Helix} examples, $0.82-1.52\times $ for \texttt{Cube} examples and $0.58-1.62\times $ for \texttt{Sphere} examples (\texttt{Cube} and \texttt{Sphere} with lots of noise), so we omit the results.
+Due to consistent speedups of $1.05\times $ for the \texttt{Sphere} and $1.06\times $ for the \texttt{Cube} on the single-threaded algorithm, we still believe the circular buffer or preallocated memory is useful for a dense enough structure.
+For a \texttt{Cube} of size 800 the time saved is 1.43 of 24.05 seconds (6\%) and for a \texttt{Sphere} 0.66 of 12.37 seconds (5.3\%).
+
+\subsection{Artificial examples}\label{subsec:artiexamples}
+
+\begin{figure}[h]
+\centering
+  \begin{subfigure}[t]{0.5\textwidth}
+  \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/markVoxbytimeCubeSphere.pgf}}
+    %\includegraphics{plots/markVoxbytimeCubeSphere.pdf}
+    \caption{Average voxel writing speed for \texttt{Cube} and \texttt{Sphere}.}\label{fig:cubesphere}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\textwidth}
+  \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/markVoxbytimeHelix.pgf}}
+    %\includegraphics{plots/markVoxbytimeHelix.pdf}
+    \caption{Average voxel writing speed for Helixes with dilation 1 to 5.}\label{fig:helix}
+  \end{subfigure}%
+  \caption{Voxel writing speed for artificial data \texttt{Cube}, \texttt{Sphere} and \texttt{Helix} with sizes $(200\times 200\times 200)=$ 8e6 $\approx 7.63$MB, $(400\times 400\times 400)=$ 64e6 $\approx 59.6$MB and $(800\times 800\times 800)=$ 512e6 $\approx 488.28$MB with number of threads thr. In blue is~\ac{srg}, in orange 1-threaded~\ac{simpa} and in green 24-threaded~\ac{simpa} shown. Helixes have a dilation of a cube with 1 to 5 voxel edge length.}\label{fig:exartificial}%
+\end{figure}
+\textbf{Comparison to Park et al.}
+%The following artificial example can be directly compared to
+In~\Cref{fig:cubesphere} the results for \texttt{Cube} and \texttt{Sphere} of three cube-shaped data sizes 8e6, 64e6 and 512e6 voxel and their respective total voxel writing speed in $\frac{\text{voxel}}{\mu s}$ are given.
+%In blue is~\ac{srg}, in orange 1-threaded~\ac{simpa} and in green 24-threaded~\ac{simpa} depicted.
+In contrast to the results by Park et al. (see~\Cref{subsec:relatedwork}) \textbf{our voxel writing speed does not scale linear with the number of threads}, but one may see a linear tendency for both the \texttt{Cube} and \texttt{Sphere} of sizes 512e6 below 10 cores.
+For example the \texttt{Cube} of 64e6 size needs 82.8$\frac{\text{voxel}}{\mu s}$ for 24-threaded~\ac{simpa} and 17.7$\frac{\text{voxel}}{\mu s}$ for the~\ac{srg}, which is $\frac{82.8}{17.7}\approx 4.68$ and nowhere near to 24.
+The behavior of the \texttt{Sphere} with size 64e6 is equivalent.
+Both the \texttt{Cube} and the \texttt{Sphere} are more into that direction with $\frac{318.4}{17.7}=17.99\frac{\texttt{voxel}}{\mu s}$ (\texttt{Cube}) and $\frac{322.3}{17.2}=18.74\frac{\texttt{voxel}}{\mu s}$.
+Park et al. had $0.7 \frac{\texttt{voxel}}{\mu s}$ 1-threaded~\ac{srg} writing speed and $2.6 \frac{\texttt{voxel}}{\mu s}$ writing speed using 4 cores for examples of sizes of $10e6$ to $60e6$ voxel.
+Notably,~\ac{srg} has for the \texttt{Cube} of size 8e6 a $4.5$x faster voxel writing speed than 1-threaded~\ac{simpa} and 3.9 faster than 24-threaded~\ac{simpa}.
+The \texttt{Sphere} has $7.36$x voxel writing speed than the 24-threaded~\ac{simpa} solution.
+The voxel writing speed of the \texttt{Cube} and \texttt{Sphere} of size 64e6 is higher on the 1-threaded~\ac{simpa} than~\ac{srg}, which indicates measurement errors.\par
+\textbf{In contrast to the theoretical estimation} in~\Cref{subsubsec:cacheeffects}, the~\ac{srg} Voxel writing speed for the cube drops between an edge length of $a = 200$ ($53.7 \frac{\texttt{voxel}}{\mu s}$) and $a=400$ ($17.7 \frac{\texttt{voxel}}{\mu s}$).
+The estimation predicted a drop of the Voxel writing speed starting with edge length $a\approx 489$, but it remains constant to $a=400$ ($17.7 \frac{\texttt{voxel}}{\mu s}$) for~\ac{srg}.
+
+\textbf{Cache-contention}
+In~\Cref{fig:helix} the results of the \texttt{Helixes} with dilation 1 to 5 for the sizes 8e6, 64e6 and 512e6 voxel and their voxel writing speed in $\frac{\text{voxel}}{\mu s}$ are shown.
+On all cases~\ac{srg} had the fastest writing speed, with factor $>150\times$ up to $1873\times$ for the sizes 8e6 and 64e6 voxel.
+For the sizes of 8e6 and 64e6 the voxel writing speed of~\ac{srg} and 24-threaded~\ac{simpa} is roughly identical, but for 512e6 the slowdown is between 0.814 and $0.663\times$ from~\ac{srg} to 24-threaded~\ac{simpa}.
+The voxel writing speed for bigger file-sizes on~\ac{srg} increases, with high deviation and linear tendency from 28.1$\frac{\text{voxel}}{\mu s}$ ($\text{size} = 8e6$,dilation $D=1$) to 26.6$\frac{\text{voxel}}{\mu s}$  ($\text{size} = 8e6$, dilation $D=5$).
+The tendency for 1-threaded and 24-threaded~\ac{simpa} is similar.
+The \texttt{Helixes} with size of 64e6 voxel have roughly twice the writing speed than those with identical dilation and size of 8e6 voxel.
+The speedup of the writing between different \texttt{Helix} dilation of the same size is \textbf{dependent on the surface change for 1-threaded and 24-threaded~\ac{simpa} for sizes lower or equal to 64e6 voxel}. It should be noted, that \textbf{our L3 cache size is 33MB}.\par
+\textit{For example} from the \texttt{Helix} with dilation 4 to the Helix with dilation 5, we get a surface change of $\frac{5^2}{4^2}=\frac{25}{16}=1.5625$.
+%The voxel writing speed for the \texttt{Helix} with dilation 4 for sizes (8e6, 64e6) are for the 1-threaded~\ac{simpa} (0.235,0.473,37.246) and for the 24-threaded~\ac{simpa} (0.234,0.469).
+The voxel writing speed for the \texttt{Helix} with dilation 4 for sizes (8e6, 64e6) are for the 24-threaded~\ac{simpa} (0.234,0.469).
+Multiplied by the surface change we get for the 24-threaded~\ac{simpa} (0.366,0.733), which is almost the actual writing speed with (0.366,0.727).
+%baseline writing speed Helix_D4_simpleSRG1 8000000 51.155709342560556
+%24threads writing speed Helix_D4_simpleSRG1 8000000 0.2342358400323215
+%baseline writing speed Helix_D4_simpleSRG1 64000000 46.65911310802891
+%24threads writing speed Helix_D4_simpleSRG1 64000000 0.4688810365135454
+
+%baseline writing speed Helix_D5_simpleSRG1 8000000 56.595354523227385
+%24threads writing speed Helix_D5_simpleSRG1 8000000 0.36593945142676465
+%baseline writing speed Helix_D5_simpleSRG1 64000000 57.910401488141375
+%24threads writing speed Helix_D5_simpleSRG1 64000000 0.7270568773415074
+
+\begin{figure}[!ht]
+  \begin{subfigure}{0.5\textwidth}%
+    \adjustbox{max width=0.8\textwidth}{\input{plots/speedup_CubeFull_512000000.pgf}}
+    %\includegraphics{plots/speedup_CubeFull_512000000.pdf}
+    \caption{\texttt{Cube:} Average speedup by number of threads.}\label{fig:cubespeedup}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}%
+    \adjustbox{max width=0.8\textwidth}{\input{plots/speedup_SphereFull_512000000.pgf}}
+    %\includegraphics{plots/speedup_SphereFull_512000000.pdf}
+    \caption{\texttt{Sphere:} Average speedup by number of threads.}\label{fig:spherespeedup}
+  \end{subfigure}%
+\\
+  \begin{subfigure}{0.5\textwidth}%
+    \adjustbox{max width=0.8\textwidth}{\input{plots/times_CubeFull_512000000.pgf}}
+    %\includegraphics{plots/times_CubeFull_512000000.pdf}
+    \caption{\texttt{Cube:} Average time by number of threads.}\label{fig:cubetime}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}%
+    \adjustbox{max width=0.8\textwidth}{\input{plots/times_SphereFull_512000000.pgf}}
+    %\includegraphics{plots/times_SphereFull_512000000.pdf}
+    \caption{\texttt{Sphere:} Average time by number of threads.}\label{fig:spheretime}
+  \end{subfigure}%
+  \caption{\texttt{Cube} and \texttt{Sphere}: Speedup and absolute time by size and number of threads.
+  \Cref{fig:cubespeedup,fig:spherespeedup}: The 1-fold speedup is annotated as red line.
+  \Cref{fig:cubetime,fig:spheretime}: The time of~\ac{srg} is annotated as horizontal line of color according to the size.}
+  \label{fig:cubesphere_speeduptime}
+\end{figure}%
+
+\textbf{Speedup and absolute time}
+In~\Cref{fig:cubesphere_speeduptime} the speedups to~\ac{srg} and the time of the \texttt{Cube} and \texttt{Sphere} with size 8e6, 64e6 and 512e6 voxel are depicted.
+%in~\Cref{fig:cubespeedup} and~\Cref{fig:spherespeedup}.
+\Cref{fig:cubetime} and~\Cref{fig:spheretime} show the 1-threaded times for different sizes.
+All speedups for the \texttt{Cube} in~\Cref{fig:cubespeedup} and \texttt{Sphere} in~\Cref{fig:spherespeedup} appear to approach a maximum of an exponential function defined by speedup $s(t)=s_{\text{max}} * (1-e^{-\frac{t}{\tau}})$, where $\tau$ is a constant and $s_\text{max}$ the maximal speedup.
+However this behavior is disturbed by a growing number of threads and becomes swagged.
+The maximum speedup for the size of 8e6 is reached.
+While the maximum speedup for the size of 64e6 is reached for 5 threads in the \texttt{Sphere} with $2.77\times $, it is reached for 9 threads in the \texttt{Cube} with $4.67\times $.
+In all sizes of the \texttt{Sphere} the amount of elements contains 0.52 times the size of the \texttt{Cube}. 
+The maximum speedup of the Sphere is ca $0.59$ times the speedup of the \texttt{Cube}.
+The relation for 8 threads of the speedups of the \texttt{Sphere} $(2.43\times )$ to the \texttt{Cube} $(3.56\times )$ is $0.68$.\par
+Complementary the needed time for the \texttt{Cube} and \texttt{Sphere} in~\Cref{fig:cubetime} and~\Cref{fig:spheretime}.
+The absolute time in seconds for the \texttt{Cube} approaches ca. 0.58, 0.77 and 1.60 seconds for the sizes of 8e6, 64e6 and 512e6 voxel.
+Respectively, it is 0.54, 0.65 and 0.83 seconds for the \texttt{Sphere}.
+Already for 8 threads we have 0.56, 1.01 and 2.74 seconds for the \texttt{Cube} and 0.55, 0.75 and 1.45 seconds for the \texttt{Sphere}.
+%1-threaded times??
+The 1-threaded times for the according times are for the \texttt{Cube} 0.15, 3.61 and 28.87 seconds and for the \texttt{Sphere} 0.07, 1.83 and 15.63 seconds.
+The relation of the bigger sizes (64e6 and 512e6 voxel) are 0.125 for both the \texttt{Cube} and the \texttt{Sphere} and match the time relation of 8 very closely ($\frac{\text{writing time for 64e6 voxel}}{\text{writing time for 512e6 voxel}} = \frac{3610209\mu s}{28872347\mu s} \approx 0.12504$).
+This is not the case of 8e6 to 64e6 voxel, where
+$\frac{\text{written voxel of 8e6}}{\text{written voxel of 64e6}} = 0.125$
+for both the \texttt{Sphere} and the \texttt{Cube} and
+$\frac{\text{writing time for 8e6}}{\text{writing time for 64e6}} = \frac{148993\mu s}{3610209\mu s}\approx 0.04127$.
+
+\subsection{Real examples}\label{subsec:realexamples}
+
+%\begin{wrapfigure}{R}{0.5\textwidth} %\end{wrapfigure} BROKEN
+%\scalebox (but subfigure broken as well)
+%\resizebox (but subfigure broken as well)
+\begin{figure}[!ht]
+  \begin{subfigure}[t]{0.5\linewidth}
+  \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/markVoxbytimeREALexamples.pgf}}
+    \caption{Average voxel writing speed for real data.}\label{fig:speedreal}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.5\textwidth}
+  \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/timebysizeREALexamples.pgf}}
+    \caption{Average time in seconds for real data.}\label{fig:timereal}
+  \end{subfigure}
+\caption{Voxel writing speed and time of real data by number of threads thr.}\label{fig:real}
+\end{figure}
+
+In~\Cref{fig:speedreal} the results for voxel writing speed and time comparison between real examples of~\ac{srg} and~\ac{simpa} are depicted.
+Most notable speedups of the voxel writing speed are for the examples \texttt{BoneMaskHigh} ($\frac{139.4}{19.2}=7.26\times $) and \texttt{Head\_of\_mouse} ($\frac{147.8}{30.8}=4.80\times $).
+The example \texttt{Maus\_mit\_Draht} does not scale good with a $\frac{9.4}{51.5}=0.18\times $ slowdown and the \texttt{Skeleton} scales worse with a $\frac{0.4}{40.1}=0.01\times $ slowdown.
+In the following we will categorize the examples \texttt{BoneMaskHigh}, \texttt{Maus\_mit\_Draht} and \texttt{Skeleton} as representatives of data classes,
+since their behavior is characteristic for the relation between~\ac{srg} and two~\ac{simpa} solutions.
+\texttt{BoneMaskHigh} and \texttt{Head\_of\_mouse} are similar in their relation of the~\ac{srg} solution and the~\ac{simpa} solution using one thread and their relation to the~\ac{simpa} solution using 24 threads.
+The same holds for \texttt{Maus\_mit\_Draht}, where the~\ac{srg} solution is consistently faster than the~\ac{simpa} solutions, but there is a marginal speedup from one to 24 threads in the~\ac{simpa} solution.
+When we compare this to~\Cref{fig:timereal}, we see the consistent drop for 24 threads from 7.3 and 5.2 seconds to roughly one second for \texttt{BoneMaskHigh} and \texttt{Head\_of\_mouse}.
+The \texttt{Skeleton} yields the same result as the \texttt{Cube} and \texttt{Sphere} for the size of 8e6 voxel.
+\par
+\begin{figure}[!ht]
+  \centering \vskip 0pt
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/speedup_BoneMaskHigh_2127360000.pgf}}
+    \caption{\texttt{BoneMaskHigh:} Average speedup by number of threads.}\label{fig:bonemaskhighspeedup}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/times_BoneMaskHigh_2127360000.pgf}}
+    \caption{\texttt{BoneMaskHigh:} Average time by number of threads.}\label{fig:bonemaskhightime}
+  \end{subfigure}%
+\\
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    {\input{plots/speedup_Head_of_mouse_350280000.pgf}}
+    \caption{\texttt{Head\_of\_mouse:} Average speedup by number of threads.}\label{fig:headofmousespeedup}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/times_Head_of_mouse_350280000.pgf}}
+    \caption{\texttt{Head\_of\_mouse:} Average time by number of threads.}\label{fig:headofmousetime}
+  \end{subfigure}%
+  \caption{\textbf{High speedup examples:} Speedup and absolute time by size and number of threads. The base speedup of $1$x and the~\ac{srg} time are depicted with red lines.}\label{fig:realexamplesgood}
+\end{figure}%
+
+In~\Cref{fig:realexamplesgood}, the results of good scaling for real examples are shown.
+Around 10 threads is a close-to-maximum speedup of ca. $7.2\times $ and $5.1\times $ for both \texttt{BoneMaskHigh} and \texttt{Head\_of\_mouse}, which are comparable ($7.1\times $) or higher ($4.7\times $) than the speedup for 24 threads.
+However, for 11 threads a heavy drop on speedup and increase on overall time for the \texttt{BoneMaskHigh} is visible.
+The same behavior occurs with 14 and 19 threads for \texttt{Head\_of\_mouse}.
+In \texttt{BoneMaskHigh} the speedup fluctuation decreases with increasing number of threads, which is in contrast to the \texttt{Cube} and the \texttt{Sphere}, where the speedup fluctuations increases.
+For \texttt{Head\_of\_mouse} the fluctuation converges to a linear behavior with infrequent drops (\Cref{fig:headofmousespeedup}).
+However, every second time step up to the maximal speedup shows a speedup drop in the \texttt{Head\_of\_mouse} example.
+This indicates to be an \textbf{effect of hyper-threading}, since hyper-threaded cores have no cache controller and thus no improvement in data-throughput.
+Retrospectively looking at the examples depicted in~\Cref{fig:cubespeedup} and~\Cref{fig:spherespeedup}, wee see a similar characteristic, where a follow-up data point shows often only minimal speedup increase in contrast to the next data point afterwards.
+\par
+The overall execution time with increasing threads converges from $8s$ (\Cref{fig:bonemaskhightime}) and $6s$ (\Cref{fig:headofmousetime}) to $2s$ for 5 threads for both examples.
+Thereafter it drops to ca. $1s$ for 10 threads for both examples with an later increase to $1.1s$ for \texttt{Head\_of\_mouse}.
+
+\begin{figure}[!ht]
+  \centering \vskip 0pt
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/speedup_Maus_mit_Draht_495846240.pgf}}
+    \caption{\texttt{Maus\_mit\_Draht:} Average speedup by number of threads.}\label{fig:mausmitdrahtspeedup}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/times_Maus_mit_Draht_495846240.pgf}}
+    \caption{\texttt{Maus\_mit\_Draht:} Average time by number of threads.}\label{fig:mausmitdrahttime}
+  \end{subfigure}%
+\\
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/speedup_Skeleton_26250510.pgf}}
+    \caption{\texttt{Skeleton:} Average speedup by number of threads.}\label{fig:skeletonspeedup}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering \vskip 0pt
+    \adjustbox{max width=0.8\textwidth}{\input{plots/times_Skeleton_26250510.pgf}}
+    \caption{\texttt{Skeleton:} Average time by number of threads.}\label{fig:skeletontime}
+  \end{subfigure}%
+  \caption{\textbf{Low speedup examples:} Speedup and absolute time by size and number of threads. The baseline for speedup of $1$x and overall time of~\ac{srg} in seconds are depicted with red lines.}\label{fig:realexamplesbad}
+\end{figure}%
+
+The examples for poor or non-existent parallelization, \texttt{Maus\_mit\_Draht} and \texttt{Skeleton}, are depicted in~\Cref{fig:realexamplesbad}.
+On the left side speedups and on the right side times are annotated.
+In comparison, \texttt{Maus\_mit\_Draht} scales not at all by the number of threads and has a slowdown of ca $0.1\times $ (\Cref{fig:mausmitdrahtspeedup}).
+The speedup of the~\texttt{Skeleton} is even worse at ca $0.01\times $ (\Cref{fig:skeletonspeedup}).\par
+The example \texttt{Maus\_mit\_Draht} needs on usage of~\ac{simpa} always more than $0.54s$ in contrast to $0.1s$ of~\ac{srg} (\Cref{fig:mausmitdrahttime}).
+The \texttt{Skeleton} needs always $0.5s$ for~\ac{simpa} and $0.05s$ for~\ac{srg}.
+
+\subsection{Shortcomings}\label{subsec:shortcomings}
+\textbf{Detach}
+Even though atomic structures make sure that all threads are finished working on the dataset,
+the current implementation of~\ac{simpa} broke on the RWTH Aachen cluster.
+For efficiency we give control of the newly created thread to the kernel with \texttt{detach}.
+When the kernel does not free the thread resources in time (ie due to heavy load on the cluster) and the program exits, the file descriptors and the buffered output are dropped.
+Sometimes this leads to incomplete or missing data points in the benchmark.
+Reading the thread status of any detached thread is not part of the POSIX-standard and the used language, so we did not implement this.
+A simple solution for Linux is to read \texttt{/proc} as part of the user file system and wait for the count of threads with the same process id to become 1.\\
+\textbf{Cache-contention between CPU cores}
+The \texttt{Helixes} and \texttt{Maus\_mit\_Draht}, as examples with cache-contention (\Cref{subsubsec:datacontentionthreads}), showed considerable time loss.
+For a mitigation we can try to approximate, if we go into only one direction of a narrow tube and consequently do not create another thread.
+Every count $m$ of marked voxel we compute the distance from the current voxel position $(x_\text{cur},y_\text{cur},z_\text{cur})$ to the predecessor voxel position $(x_\text{pred},y_\text{pred},z_\text{pred})$ with $(|x_\text{cur}-x_\text{pred}|^2 + |y_\text{cur}-y_\text{pred}|^2 + |z_\text{cur}-z_\text{pred}|^2)$.
+If the distance exceeds a limit with certain pattern until the 1000-th voxel, we do not try to create a new thread.
+We implemented a prototype in \texttt{commonSIMPAspeed.h}, but did not evaluate it further due to lack of time.
+
+\subsection{Benchmark result summary}\label{subsec:benchmark_result_summary}
+All the results can be summarized in~\Cref{tab:cachedexample} and~\Cref{tab:uncachedexample} to depict more accurately the cache effects.
+\begin{table}
+  \centering
+  \caption{Cache-driven examples, count of threads thr.}\label{tab:cachedexample}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \textbf{Example} & \textbf{all}[B] & \textbf{written}[B] & \textbf{written}[MB] &
+  \textbf{speed}(1,24) thr & \textbf{time}[s](1,24) thr\\
+  \hline
+  \texttt{Cube}             & 8,000,000   & 8000,000 & 7.63 & (53.7, 13.8) & (0.15, 0.58)\\
+  \texttt{Sphere}           & 8,000,000   & 4187,707 & 3.99 & (56.7, 7.7) & (0.07, 0.55)\\
+  \texttt{Helix\_D1-D5}     & 8,000,000   & 7,260 - 185,180 & 0.007 - 0.177 & (28.1-56.6, 0.015-0.37) & (<3.2e-3,<501e-3)\\
+  \texttt{Helix\_D1-D5}     & 64,000,000  & 14796 - 373,580 & 0.014 - 0.356 & (26.8-57.9, 0.03-0.73) & (<6.5e-3,<514e-3)\\
+  \texttt{Helix\_D1-D5}     & 512,000,000 & 29,884 - 750,780 & 0.028 - 0.716 & (24.5-47.2,17.2-33.2) & (<15e-3,<22e-3)\\
+  \texttt{Skeleton}         & 26,250,510  & 206,976 & 0.2 & (40.1, 0.4) & (5e-3,505e-3)\\
+  \texttt{Maus\_mit\_Draht} & 495,846,240 & 5,138,538 & 4.9 & (51.5, 9.4) & (0.10,0.55)\\
+  \hline
+\end{tabular}
+\end{table}
+For the cached examples shown in~\Cref{tab:cachedexample}:
+The \texttt{Cube} and \texttt{Sphere} examples of sizes $8e6\approx 7.63$MB fit completely into the RWTH cluster L3 cache of size 33MB.
+Also the surface of the \texttt{Cube} is at maximum 240e3$ \approx 0.229$MB, which is much less than the $1$MB L2-cache (core-individual) size.
+An according computation holds for the \texttt{Sphere} of the same size.\par
+The \texttt{Helix} examples are cache-driven or blocked, since the surface in each round can never be bigger than $5^2*2 = 50$B for dilation of 5, which fits completely into L1 cache.
+The exact cause for the lower slowdown of the \texttt{Helix} examples with size 512e6 voxel on increasing number of threads remains to be investigated.\par
+The overall space by written voxel is for the \texttt{Skeleton} less than ca. $0.2$MB, which fits into L2 cache with according implications.\par
+On executing the example \texttt{Maus\_mit\_Draht} ca. 4.9MB are written with, for the 1-threaded ~\ac{srg}, a writing speed of 51.5$\frac{\text{voxel}}{\mu s}$.
+This is very close to the \texttt{Cube} of size 8e6 size with 53.7$\frac{\text{voxel}}{\mu s}$ and the \texttt{Helix} with dilation 4 and size 8e6 with 51.2$\frac{\text{voxel}}{\mu s}$.\par
+
+\begin{table}
+  \centering
+  \caption{Non-cache-driven examples, count of threads thr.}\label{tab:uncachedexample}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \textbf{Example} & \textbf{all}[B] & \textbf{written}[B] & \textbf{written}[MB] &
+  \textbf{speed}(1,24) thr & \textbf{time}[s](1,24) thr\\
+  \hline
+  \texttt{Cube}           & 64,000,000    & 64,000,000  & 61.04 & (17.73, 82.84) & (3.61, 0.77)\\
+  \texttt{Cube}           & 512,000,000   & 512,000,000 & 488.28 & (17.73, 318.4) & (28.87, 1.61) \\
+  \texttt{Sphere}         & 64,000,000    & 33,507,735  & 31.96 & (18.3, 50.9) & (1.83, 0.66) \\
+  \texttt{Sphere}         & 512,000,000   & 268,077,587 & 255.66 & (17.1, 322.3) & (15.63, 0.83) \\
+  \texttt{BoneMaskHigh}   & 2,127,360,000 & 140,621,268 & 134.11 & (19.2, 139.4) & (7.33, 1.01) \\
+  \texttt{Head\_of\_mouse}& 350,280,000   & 159,090,055 & 151.72 & (30.8, 147.8) & (5.17, 1.08) \\
+  \hline
+\end{tabular}
+\end{table}
+In contrast to that are structures, which are not cache-driven depicted in~\Cref{tab:uncachedexample}:
+The \texttt{Cube} and \texttt{Sphere} of sizes starting with $64e6\approx 61.04$MB do not fit into the L3 cache and thus require parallelization.
+They scale excellently, with speedups of up to 20, due to being dense and without obstacles for the surface growing of~\ac{srg}.\par
+The examples of size 64e6 voxel for both the \texttt{Cube} and \texttt{Sphere} in~\Cref{fig:cubesphere_speeduptime} show the limit of~\ac{mad} as exponential curve and may be used as baseline for~\ac{simpa} to get architecture-specific information to adopt the algorithm.\par
+  Noteworthy are the similarities on voxel writing speed between \texttt{Cube} and \texttt{Sphere} of size 512e6 voxel at around 320$\frac{\text{voxel}}{\mu s}$, but future experiments would be needed to explicitly disable hyper-threading and get a more accurate behavior.\par
+The examples \texttt{BoneMaskHigh} and \texttt{Head\_of\_mouse} scale excellent (speedup of 7 and 4.6), even though the structures are very branched.
+Especially interesting would be a comparison of those two eaxmples to GPU methods, which we expect, due to reliance on batch processing, to be slower per core.
+
+\section{Discussion}\label{sec:discussion}
+The theoretical assumptions can explain our results in a very good matter, but leave open questions.
+Our results did show that our theoretical estimations of usable cache were too optimistic (for the system configuration).
+Thus we believe that the usable cache sizes need to be measured, as many related information,
+like how the hardware memory prefetcher or cache replacement strategy work, are not disclosed.\par
+There is no portable way to detect and use physical cores (instead of hyper-threaded cores) in C and it is not part of the C++ standard library.
+Hence one needs to call~\ac{simpa} with a proper CPU configuration, which is error-prone.
+%HELIX
+The increasing voxel writing speed for higher dilations of the \texttt{Helix} stem from prefetching time due to a more filled queue.
+Bigger input sizes for the Helixes result in longer straight lines, which in turn are more successfull to be speculative prefetched by the hardware prefetcher.
+On parallelization, this could make in most cases the creating thread be faster than the created thread to process the voxel.
+%CACHING
+Cache-contention between threads is clearly visible in the \texttt{Helix} examples.
+\par
+The \texttt{Skeleton} example shows a small data structure, for where a decision for parallelization results in worse outcome.
+A similar result is obtained with \texttt{Maus\_mit\_Draht}.
+Cache-contention at the wire and ribs in the skeleton are the likely cause.
+These cases can likely be fixed by a heuristic to choose either~\ac{srg} or~\ac{simpa} from resolution and density of the expected region.
+%The reason for the faster execution speed is that all data fits into L3 cache with according lower memory access delay.
+\texttt{Skeleton}, \texttt{Helixes} and \texttt{Maus\_mit\_Draht} have a voxel writing speed of above $40\frac{\texttt{voxel}}{\texttt{\mu s}}$, which indicates that the cache lines from the voxel values and voxel positions of the queue fit into L3 cache.
+However, overall they do not make an essential difference, since the total runtime remains around 0.5 seconds.
+\par
+\texttt{BoneMaskHigh} and \texttt{Head\_of\_mouse} have a very good speedup, although their structure is different.
+BoneMaskHigh is a forked structure, whereas \texttt{Head\_of\_mouse} is more dense.
+\texttt{Maus\_mit\_Draht} has a bad speedup due to cache-contention in the wire.\par
+From this outcomes, we formulate observations for different input classes for~\ac{srg}:
+\textbf{Small structures}, that fit into cache, are optimal to process single-threaded.
+For \textbf{bigger structures} we differentiate into \textbf{dense structures} and \textbf{sparse structures}.\par
+\textbf{Dense structures} may be faster processed by~\ac{sbrg} (\Cref{subsec:relatedwork}) approaches, since they can use optimal cache sizes.
+However growing voxel regions may create a path, which leads multiple times through arbitrary many supervoxel.
+Since each pass of supervoxel border means considerable synchronisation overhead and following of a path can not be parallelized due to cache-contention, a combinational approach for dense structures looks more feasible.
+For \textbf{Sparse structures} the use of multiple threads seems more appropriate, if the effects of cache-contention are small enough.
+We can split \textbf{sparse structures} into \textbf{tubular structures} and \textbf{forked structures}.
+\textbf{Tubular structures} are long thin structures with strong cache-contention and should be processed single-threaded.
+\textbf{Forked structures} are ideal for multiple independent threads, because cache-contention is unlikely without bottlenecks like tubes.\par
+
+\section{Summary and future work}\label{sec:summary_futurework}
+\acresetall
+We showed that by using~\ac{simpa} (\Cref{alg:srgpar}) one can expect speedups of up to 8-fold (or doubling of the precision) for realistic examples(\texttt{BoneMaskHigh}, \texttt{Head\_of\_mouse}) with a reasonable amount of 8-10 cores and enough cache size.
+On 4 real and 4 hyper-vised cores of an older laptop from 2017 a speedup of up to 2 is to be expected.
+Unfavorable examples had on parallelization a total execution time of around 0.5 seconds, which makes them feasible for application.
+Further we showed in this work:
+\begin{enumerate}[noitemsep,nolistsep]
+  \item The upper memory bound of~\ac{srg} is derivable from the input data.
+  \item A simple parallelization of \ac{srg} is feasible for realistic workloads.
+  \item The relation of cache size and input size of data decides applicability of~\ac{srg} and~\ac{simpa}.
+  \item Cache-contention is a problem of parallelization in single tube-like structures.
+  \item There appear to be three fundamental structural trade-offs: 1. tubular structures, 2. forked structures and 3. dense, block-like structures.
+\end{enumerate}
+
+\textbf{Our recommendation} to the problem of cache-contention (examples \texttt{Helixes}, \texttt{Maus\_mit\_Draht}) is to detect approximately, if the core operates in a single tube-like structure in direction of the tube-like opening.
+Therefore we propose to estimate the~\ac{srg} growth rate in frequent time intervals and to not create other threads, if the growth rate exceeds a certain pattern. 
+We implemented a prototype in \texttt{commonSIMPAspeed.h}.
+The longterm solution could be to disable cache coherency, for which we shortly elaborate requirements.
+\begin{figure}[h]
+  \centering \vskip 0pt
+\begin{tabular}{lccc}
+  \textbf{1.} & \includegraphics[width=.2\linewidth]{figures/datacontfixSTART.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixSTART.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixSTART.pdf}\\
+  \textbf{2.} & \includegraphics[width=.2\linewidth]{figures/datacontfixA.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixB.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixSTART.pdf}\\
+  \textbf{3.} & \includegraphics[width=.2\linewidth]{figures/datacontfixEMPTY.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixB.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixA.pdf}\\
+  \textbf{4.} & \includegraphics[width=.2\linewidth]{figures/datacontfixEMPTY.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixEMPTY.pdf} & \includegraphics[width=.2\linewidth]{figures/datacontfixRES.pdf}\\
+  & Core A cache & Core B cache & L3 cache
+\end{tabular}
+  \caption{Necessary functionality without cache coherency: On the left and mid cache lines of core A and B as copy of shared L3 cache on the right. The numbers 1.-4. show the time sequence. The cache line size is simplified to 4 Bytes instead of 64.}\label{fig:nocachecoherency}
+\end{figure}
+In~\Cref{fig:nocachecoherency}, the required functionality without cache coherency is sketched.
+Both cores have in step \textbf{1.} a copy of the initial cache line.
+In step \textbf{2.} both are done with processing, but the cache line is not yet evicted (still red).
+Step 3. shows that thread A has evicted its cache line (is marked blue).
+Core B evicts its cache line in step \textbf{4.}
+\textbf{However}, core B can not do step \textbf{4.} \textbf{without a bitwise or} on the data currently in L3 cache.
+Thus we would need an Arithmetic Logic Unit with a register next to L3 cache for minimal processing delay.
+This would require additional hardware to keep track of which cache line should be treated with the \textbf{bitwise or}, and which not.
+Additionally, we would need guarantees that cache instructions can not be silently ignored.
+\par
+\textbf{Our recommendation} to the problem of~\ac{mad} is \textbf{1.} to minimize the algorithm-queue of~\ac{srg} and \textbf{2.} to use hardware with more L3 cache.\par
+  \textbf{1.} Currently we use a queue of voxel positions $(x,y,z)$ = (\texttt{int32,int32,int32}).
+  However, it is enough to save a queue with offsets, where type(\texttt{offset}) = \texttt{int32} and use
+  \begin{align}
+    xy_\text{max} &= x_\text{max}*y_\text{max}\\
+    z &= \frac{\texttt{offset\_copy}}{xy_\text{max}}\\
+    \texttt{offset\_copy} &-= z*xy_\text{max}\\
+    y &= \frac{\texttt{offset\_copy}}{x_\text{max}}\\
+    \texttt{offset\_copy} &-= y*x_\text{max}\\
+    x &= \texttt{offset\_copy}
+  \end{align}
+  with
+  \begin{align}
+    x_{\pm} &= \texttt{offset} \pm 1\\
+    y_{\pm} &= \texttt{offset} \pm x_\text{max}\\
+    z_{\pm} &= \texttt{offset} \pm xy_\text{max}
+  \end{align}
+  for the computation of neighbor voxel positions.
+  That way we use only 4 Byte per position and can use $\frac{32\text{MB}}{2*64+4\text{B}} = 254,200\approx 504^2$ or an edge length of $a=504$ for cubic input data.\par
+  \textbf{2.} As of 2020, 256MB L3 cache size are available in high-end desktop CPUs like the EPYC 7742 from AMD. 
+  We expect up to around $\frac{256\text{MB}}{132\text{B}} = 2,033,601 \approx 1426^2 \Rightarrow a=1,986$ edge length for cubic input data.
+  This is a $\frac{1426}{504} = 2.8$-fold edge length to the optimized implementation with 32MB L3 cache.
+\\
+\\
+\textbf{Acknowledgements}
+Simulations were performed with computing resources granted by RWTH Aachen University under project thes0766.
+We thank Gremse-IT to provide us with Imalytics Preclinical~\cite{gremse2016} for the creation of 3D graphics with slices.
+
+\printbibliography{}
+\end{document}

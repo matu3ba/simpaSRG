@@ -1,0 +1,8 @@
+\begin{tikzpicture}[every node/.style={minimum size=.5cm-\pgflinewidth, outer sep=0pt}]%
+    \node[fill=blue] at (0.25,+0.25) { };
+    \node[fill=blue] at (0.75,+0.25) { };
+    \node[fill=blue] at (1.25,+0.25) { };
+    \node[fill=blue] at (1.75,+0.25) { };
+    \draw[step=0.5cm,color=black] (0,0) grid (2,0.5);
+    \draw[color=blue,line width=0.5mm] (0.025,0.025) rectangle +(1.95,0.45);
+\end{tikzpicture}%

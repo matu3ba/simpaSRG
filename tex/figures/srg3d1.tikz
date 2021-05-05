@@ -1,0 +1,22 @@
+\begin{tikzpicture}[every node/.style={minimum size=.5cm-\pgflinewidth, outer sep=0pt}]%
+%0.25 + 0.75
+    %\node[fill=red]       at (0.25,+1.25) {};
+    \node[fill=red]  at (0.75,+1.25) {};
+    \node[fill=lightgray]  at (1.25,+1.25) {};
+    \node[fill=red]  at (1.75,+1.25) {};
+    %\node[fill=red]       at (2.25,+1.25) {};
+
+    %\node[fill=red]        at (0.75,+0.75) {};
+    \node[fill=red]  at (1.25,+0.75) {};
+    %\node[fill=red]        at (1.75,+0.75) {};
+
+    %\node[fill=red]        at (0.75,+1.75) {};
+    \node[fill=red]  at (1.25,+1.75) {};
+    %\node[fill=red]        at (1.75,+1.75) {};
+
+    %\node[fill=red]       at (0.25,+1.25) {};
+    %\node[fill=red]       at (2.25,+1.25) {};
+
+    \draw[step=0.5cm,color=black] (0,0) grid (2.5,2.5);
+\end{tikzpicture}%
+

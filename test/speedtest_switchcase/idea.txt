@@ -1,0 +1,19 @@
+--- Idea ---
+Ray-cast by free thread (core not running)
+
+append 1 byte to work_queue to encode
+1. last move (6 options x,y,z with ++ and --) [last 3 bits from left]
+2. counting up on same direction from 1 until maximum of $2^5=32$ [first 5 bits from left]
+- pixel ordering with prioritization?
+- remove checks and elements that were checked already
+[code bloat hopefully can be managed by template programming]
+
+--- Extension ---
+case -> prioritization
+36 cases needed to encode by template programming
+6*6 moving options [1-36] -> $2^6=64$
+counting to 2*2-1=3 => low numbering
+--> 2 byte needed
+
+The non-priotized elements should be reordered as well, and might use left- or right hand rule.
+(like in a electron-field)

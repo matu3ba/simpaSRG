@@ -1,0 +1,104 @@
+baseline time BoneMaskHigh_simpleSRG1 2127360000 7.327374
+baseline writing speed BoneMaskHigh_simpleSRG1 2127360000 19.19122294016929
+time24thread BoneMaskHigh_simpleSRG1 2127360000 1.009066
+24threads writing speed BoneMaskHigh_simpleSRG1 2127360000 139.35784973430876
+baseline time Head_of_mouse_simpleSRG1 350280000 5.172526
+baseline writing speed Head_of_mouse_simpleSRG1 350280000 30.75674341704614
+time24thread Head_of_mouse_simpleSRG1 350280000 1.076653
+24threads writing speed Head_of_mouse_simpleSRG1 350280000 147.76353662693552
+baseline time Maus_mit_Draht_simpleSRG1 495846240 0.099755
+baseline writing speed Maus_mit_Draht_simpleSRG1 495846240 51.51158337927924
+time24thread Maus_mit_Draht_simpleSRG1 495846240 0.546495
+24threads writing speed Maus_mit_Draht_simpleSRG1 495846240 9.402717316718359
+baseline time Skeleton_simpleSRG1 26250510 0.005156
+baseline writing speed Skeleton_simpleSRG1 26250510 40.14274631497285
+time24thread Skeleton_simpleSRG1 26250510 0.505345
+24threads writing speed Skeleton_simpleSRG1 26250510 0.40957365760025327
+baseline time Skull_of_mouse_simpleSRG1 350280000 0.323893
+baseline writing speed Skull_of_mouse_simpleSRG1 350280000 42.065947704951945
+time24thread Skull_of_mouse_simpleSRG1 350280000 0.599795
+24threads writing speed Skull_of_mouse_simpleSRG1 350280000 22.71587125601247
+baseline time CubeFull_simpleSRG1 8000000 0.148993
+baseline writing speed CubeFull_simpleSRG1 8000000 53.69379769519374
+time24thread CubeFull_simpleSRG1 8000000 0.579889
+24threads writing speed CubeFull_simpleSRG1 8000000 13.795743668184773
+baseline time CubeFull_simpleSRG1 64000000 3.610209
+baseline writing speed CubeFull_simpleSRG1 64000000 17.727505526688343
+time24thread CubeFull_simpleSRG1 64000000 0.772608
+24threads writing speed CubeFull_simpleSRG1 64000000 82.8363154406892
+baseline time CubeFull_simpleSRG1 512000000 28.872347
+baseline writing speed CubeFull_simpleSRG1 512000000 17.733231039374804
+time24thread CubeFull_simpleSRG1 512000000 1.608177
+24threads writing speed CubeFull_simpleSRG1 512000000 318.37291541913606
+baseline time SphereFull_simpleSRG1 8000000 0.073894
+baseline writing speed SphereFull_simpleSRG1 8000000 56.67181367905378
+time24thread SphereFull_simpleSRG1 8000000 0.546072
+24threads writing speed SphereFull_simpleSRG1 8000000 7.668781772367014
+baseline time SphereFull_simpleSRG1 64000000 1.82704
+baseline writing speed SphereFull_simpleSRG1 64000000 18.33990224625624
+time24thread SphereFull_simpleSRG1 64000000 0.658411
+24threads writing speed SphereFull_simpleSRG1 64000000 50.89182136993458
+baseline time SphereFull_simpleSRG1 512000000 15.630849
+baseline writing speed SphereFull_simpleSRG1 512000000 17.15054550139919
+time24thread SphereFull_simpleSRG1 512000000 0.831884
+24threads writing speed SphereFull_simpleSRG1 512000000 322.2535678051267
+baseline time Helix_D1_simpleSRG1 8000000 0.000258
+baseline writing speed Helix_D1_simpleSRG1 8000000 28.13953488372093
+time24thread Helix_D1_simpleSRG1 8000000 0.500611
+24threads writing speed Helix_D1_simpleSRG1 8000000 0.014502278216020023
+baseline time Helix_D1_simpleSRG1 64000000 0.000553
+baseline writing speed Helix_D1_simpleSRG1 64000000 26.755877034358047
+time24thread Helix_D1_simpleSRG1 64000000 0.501198
+24threads writing speed Helix_D1_simpleSRG1 64000000 0.029521267044162185
+baseline time Helix_D1_simpleSRG1 512000000 0.001219
+baseline writing speed Helix_D1_simpleSRG1 512000000 24.51517637407711
+time24thread Helix_D1_simpleSRG1 512000000 0.00174
+24threads writing speed Helix_D1_simpleSRG1 512000000 17.17471264367816
+baseline time Helix_D2_simpleSRG1 8000000 0.000812
+baseline writing speed Helix_D2_simpleSRG1 8000000 36.1576354679803
+time24thread Helix_D2_simpleSRG1 8000000 0.501456
+24threads writing speed Helix_D2_simpleSRG1 8000000 0.05854950384480393
+baseline time Helix_D2_simpleSRG1 64000000 0.001379
+baseline writing speed Helix_D2_simpleSRG1 64000000 43.150108774474255
+time24thread Helix_D2_simpleSRG1 64000000 0.503281
+24threads writing speed Helix_D2_simpleSRG1 64000000 0.1182321605623896
+baseline time Helix_D2_simpleSRG1 512000000 0.003394
+baseline writing speed Helix_D2_simpleSRG1 512000000 35.31408367707719
+time24thread Helix_D2_simpleSRG1 512000000 0.005951
+24threads writing speed Helix_D2_simpleSRG1 512000000 20.140480591497226
+baseline time Helix_D3_simpleSRG1 8000000 0.001391
+baseline writing speed Helix_D3_simpleSRG1 8000000 47.6980589503954
+time24thread Helix_D3_simpleSRG1 8000000 0.503066
+24threads writing speed Helix_D3_simpleSRG1 8000000 0.13188726727705707
+baseline time Helix_D3_simpleSRG1 64000000 0.00316
+baseline writing speed Helix_D3_simpleSRG1 64000000 42.459493670886076
+time24thread Helix_D3_simpleSRG1 64000000 0.507591
+24threads writing speed Helix_D3_simpleSRG1 64000000 0.26433092785333073
+baseline time Helix_D3_simpleSRG1 512000000 0.006296
+baseline writing speed Helix_D3_simpleSRG1 512000000 42.87865311308767
+time24thread Helix_D3_simpleSRG1 512000000 0.011661
+24threads writing speed Helix_D3_simpleSRG1 512000000 23.151016207872395
+baseline time Helix_D4_simpleSRG1 8000000 0.002312
+baseline writing speed Helix_D4_simpleSRG1 8000000 51.155709342560556
+time24thread Helix_D4_simpleSRG1 8000000 0.504927
+24threads writing speed Helix_D4_simpleSRG1 8000000 0.2342358400323215
+baseline time Helix_D4_simpleSRG1 64000000 0.005119
+baseline writing speed Helix_D4_simpleSRG1 64000000 46.65911310802891
+time24thread Helix_D4_simpleSRG1 64000000 0.5094
+24threads writing speed Helix_D4_simpleSRG1 64000000 0.4688810365135454
+baseline time Helix_D4_simpleSRG1 512000000 0.010109
+baseline writing speed Helix_D4_simpleSRG1 512000000 47.50776535760214
+time24thread Helix_D4_simpleSRG1 512000000 0.018879
+24threads writing speed Helix_D4_simpleSRG1 512000000 25.4386355209492
+baseline time Helix_D5_simpleSRG1 8000000 0.003272
+baseline writing speed Helix_D5_simpleSRG1 8000000 56.595354523227385
+time24thread Helix_D5_simpleSRG1 8000000 0.50604
+24threads writing speed Helix_D5_simpleSRG1 8000000 0.36593945142676465
+baseline time Helix_D5_simpleSRG1 64000000 0.006451
+baseline writing speed Helix_D5_simpleSRG1 64000000 57.910401488141375
+time24thread Helix_D5_simpleSRG1 64000000 0.513825
+24threads writing speed Helix_D5_simpleSRG1 64000000 0.7270568773415074
+baseline time Helix_D5_simpleSRG1 512000000 0.015893
+baseline writing speed Helix_D5_simpleSRG1 512000000 47.23966526143585
+time24thread Helix_D5_simpleSRG1 512000000 0.022618
+24threads writing speed Helix_D5_simpleSRG1 512000000 33.19391634980989

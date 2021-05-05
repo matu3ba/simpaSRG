@@ -1,0 +1,26 @@
+\begin{tikzpicture}[every node/.style={minimum size=.5cm-\pgflinewidth, outer sep=0pt}]%
+  \node[fill=gray]  at (1.75,+0.25) {};
+  \node[fill=gray]  at (1.75,+0.75) {};
+  \node[fill=gray]  at (1.75,+1.25) {};
+  \node[fill=gray]  at (1.25,+0.75) {};
+  \node[fill=gray]  at (2.25,+0.75) {};
+
+  \node[fill=red]  at (1.25,+0.25) {};
+  \node[fill=red]  at (1.25,+1.25) {};
+  \node[fill=red]  at (0.75,+0.75) {};
+  \node[fill=red]  at (2.25,+0.25) {};
+  \node[fill=red]  at (2.25,+1.25) {};
+  \node[fill=red]  at (2.75,+0.75) {};
+
+  %\node[fill=red]  at (0.75,+0.25) {};
+  %\node[fill=red]  at (0.75,+1.25) {};
+  %\node[fill=red]  at (0.25,+0.75) {};
+  %\node[fill=red]  at (2.75,+0.25) {};
+  %\node[fill=red]  at (2.75,+1.25) {};
+  %\node[fill=red]  at (3.25,+0.75) {};
+
+  \draw[step=0.5cm,color=black] (0,0) grid (3.5,1.5);
+  %or using \path
+  \draw[draw=none] (0,0)--(3.5,0) node[midway, below]{$d_3$};
+  \draw[draw=none] (0,0)--(0,1.5) node[midway, left]{$d_2$};
+\end{tikzpicture}%

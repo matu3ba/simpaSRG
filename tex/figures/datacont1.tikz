@@ -1,0 +1,23 @@
+\begin{tikzpicture}[every node/.style={minimum size=.5cm-\pgflinewidth, outer sep=0pt}]%
+    \node[fill=thread1] at (0.25,+0.25) { 0};
+    \node[fill=thread2] at (0.25,+0.75) {0};
+    \node[fill=thread1] at (0.75,+0.25) { 1};
+    \node[fill=thread2] at (0.75,+0.75) {1};
+    \node[fill=thread1] at (1.25,+0.25) { 2};
+    \node[fill=thread2] at (1.25,+0.75) {2};
+    \node[fill=thread1] at (1.75,+0.25) { 3};
+    \node[fill=thread2] at (1.75,+0.75) {3};
+    \node[fill=thread1] at (2.25,+0.25) { 4};
+    \node[fill=thread2] at (2.25,+0.75) {4};
+    \node[fill=thread1] at (2.75,+0.25) { 5};
+    \node[fill=thread2] at (2.75,+0.75) {5};
+    \node[fill=thread1] at (3.25,+0.25) { 6};
+    \node[fill=thread2] at (3.25,+0.75) {6};
+    \node[fill=thread1] at (3.75,+0.25) { 7};
+    \node[fill=thread2] at (3.75,+0.75) {7};
+    \draw[step=0.5cm,color=black] (0,0) grid (4,1);
+    \draw[color=blue,line width=1mm] (0.0,0.0) rectangle +(2.0,0.5);
+    \draw[color=blue,line width=1mm] (2.0,0.0) rectangle +(2.0,0.5);
+    \draw[color=blue,line width=1mm] (0.0,0.5) rectangle +(2.0,0.5);
+    \draw[color=blue,line width=1mm] (2.0,0.5) rectangle +(2.0,0.5);
+\end{tikzpicture}%

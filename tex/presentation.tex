@@ -1,0 +1,945 @@
+% !TeX program = lualatex
+% !TeX spellcheck = en_US
+% !TeX encoding = UTF-8
+
+%https://www.forrestthewoods.com/blog/memory-bandwidth-napkin-math/
+
+% COMPILE WITH:
+% latexmk -pdflatex=lualatex -pdf -outdir=build %
+% You need lualatex and biber (in all TeXLive distributions)
+\documentclass{beamer}
+\usepackage{fontawesome} %using symbols
+\usepackage{ifthen} %conditional commands
+\usepackage{xstring} %for string comparisons
+\usepackage{adjustbox}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{ulem}
+\input{./packages}
+\input{./glossaries}
+\bibliography{references.bib}
+
+%https://tex.stackexchange.com/questions/285578/how-to-draw-parallelepiped-and-cube-with-latex/288101#288101
+%for loops https://tex.stackexchange.com/questions/29877/need-help-creating-a-3d-cube-from-a-2d-set-of-nodes-in-tikz
+\newcommand{\tikzcuboid}[4]{% width, height, depth, scale
+\begin{tikzpicture}[scale=#4]
+\foreach \x in {0,...,#1}
+{   \draw (\x ,0  ,#3 ) -- (\x ,#2 ,#3 );
+    \draw (\x ,#2 ,#3 ) -- (\x ,#2 ,0  );
+}
+\foreach \x in {0,...,#2}
+{   \draw (#1 ,\x ,#3 ) -- (#1 ,\x ,0  );
+    \draw (0  ,\x ,#3 ) -- (#1 ,\x ,#3 );
+}
+\foreach \x in {0,...,#3}
+{   \draw (#1 ,0  ,\x ) -- (#1 ,#2 ,\x );
+    \draw (0  ,#2 ,\x ) -- (#1 ,#2 ,\x );
+}
+\end{tikzpicture}
+}
+\newcommand{\tikzcube}[2]{% length, scale
+\tikzcuboid{#1}{#1}{#1}{#2}
+}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\captionsetup[figure]{font=small}
+\captionsetup[subfigure]{singlelinecheck=off,justification=raggedright,font=scriptsize}
+%\captionsetup{singlelinecheck=off,justification=raggedleft,labelformat=empty,labelsep=none}
+
+\title{Robust, in-place, parallelized Seeded Region Growing for 3D image segmentation}
+\subtitle{
+  Studienarbeit \textsl{Medizin}
+}
+  %\\[1ex]
+  %\insertdate\\[1ex]
+  %\insertauthor\\[1ex]
+\author{Jan Philipp Hafer\\[1ex]
+Supervisor Dr. Felix Gremse}
+\date{Winter Semester 2020}
+
+\begin{document}
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+\begin{frame}{Table of Contents}
+  \tableofcontents
+\end{frame}
+\section{Algorithm input - shapes of 3D scan data}
+\begin{frame}{\insertsection}
+\begin{minipage}{0.5\textwidth}%
+  Voxel (size 1 Byte):
+\tikzcuboid{1}{1}{1}{0.5}\\
+  Cube ($4\times 4\times 4=64$B):
+\tikzcuboid{4}{4}{4}{0.5}\\
+  Cuboid:\\
+\tikzcuboid{8}{4}{4}{0.5}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}%
+  Path: \tikzcuboid{4}{1}{1}{0.5}\\
+  Dilation: \tikzcuboid{2}{2}{2}{0.5}\\
+  Dilated path: \tikzcuboid{5}{2}{2}{0.5}
+\end{minipage}%
+\end{frame}
+\section{Seeded Region Growing}
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+\subsection{Why Seeded Region Growing?}
+\begin{frame}{Why~\ac{srg}?}
+  Purpose of~\ac{srg}:\\
+  Determine and visualize connected voxel of a 3D scan for patient treatment from a user-defined starting point.\\
+  %voxel do not need to be cubic!
+  \vspace{1cm}
+  \begin{enumerate}
+      \item simple
+      \item fast
+      \item robust
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{\Ac{srg} in 2D}
+\centering
+\begin{tcolorbox}[boxsep=1pt,left=0pt,right=0pt,top=0pt,bottom=0pt,title=round 0]
+\begin{figure}[h]
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg1.pdf}
+  %\\queue:\cancel{(1,1)}}
+\end{subfigure}%a)
+\end{figure}
+\end{tcolorbox}
+\begin{tcolorbox}[boxsep=1pt,left=0pt,right=0pt,top=0pt,bottom=0pt,title=round 1]
+\begin{figure}[h]
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg2.pdf}
+  %\\queue:}
+\end{subfigure}%b)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg3.pdf}
+  %\\queue:}
+\end{subfigure}%c)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg4.pdf}
+  %\\queue:(2,3)}
+\end{subfigure}%d)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg5.pdf}
+  %\\queue:(2,3),(3,2)}
+\end{subfigure}%e)
+\end{figure}
+\end{tcolorbox}
+\begin{tcolorbox}[boxsep=1pt,left=0pt,right=0pt,top=0pt,bottom=0pt,title=round 2]
+\begin{figure}[h]
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg6.pdf}
+  %\\queue:\cancel{(2,3)},(3,2)}
+\end{subfigure}%f)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg7.pdf}
+  %\\queue:(3,2)}
+\end{subfigure}%g)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg8.pdf}
+  %\\queue:(3,2)}
+\end{subfigure}%h)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg9.pdf}
+  %\\queue:(3,2),(3,3)}
+\end{subfigure}%i)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg10.pdf}
+  %\\queue:\cancel{(3,2)},(3,3)}
+\end{subfigure}%j)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg11.pdf}
+  %\\queue:(3,3)}
+\end{subfigure}%k)
+\end{figure}
+\end{tcolorbox}
+\begin{tcolorbox}[boxsep=1pt,left=0pt,right=0pt,top=0pt,bottom=0pt,title=round 3]
+\begin{figure}
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg12.pdf}
+  %\\queue:\cancel{(3,3)}}
+\end{subfigure}%l)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg13.pdf}
+  %\\queue:}
+\end{subfigure}%m)
+\begin{subfigure}[b]{0.15\linewidth}%
+\centering
+  \includegraphics[width=0.8\linewidth]{figures/srg14.pdf}
+  %\\queue:}
+\end{subfigure}%n)
+\end{figure}
+\end{tcolorbox}
+\end{frame}
+
+\subsection{\Ac{srg} in 3D}
+\begin{frame}{\insertsubsection : round 1}
+  %\centering \vspace{-0.55cm}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep0.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 2}
+  %\centering \vspace{-0.55cm}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep1.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 3}
+  %\centering \vspace{-0.55cm}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep2.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 4}
+  %\centering \vspace{-0.55cm}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep3.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 5}
+  %\centering \vspace{-0.55cm}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep4.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 6}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep5.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 7}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep6.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 11}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep10.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\insertsubsection : round 46}
+  \includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgsteps/srgstep45.png}\\
+  octahedron - dual object to cube\\
+  \rightline{\color{gray} theory}
+\end{frame}
+%\SetAlCapNameFnt{\scriptsize}
+%\SetAlCapFnt{\scriptsize}
+%\begin{algorithm}[H]
+%  \DontPrintSemicolon
+%  %\algsetup{linenosize=\scriptsize}
+% \scriptsize
+%  \caption{\Ac{srg} by Adams and Bischoff} \label{alg:srg}
+%  \KwData{Vector \texttt{data} as voxels with values 0(invalid) or 1(valid)}
+%  \KwResult{Vector \texttt{data} as voxels with values 0(invalid), 1(unmarked) and 255(marked)}
+%  queue.push(seeding\_point); \tcp*{$(x,y,z)$} 
+%  \While{queue.empty() == false}{
+%    first\_element =  queue.front(); \tcp*{$(x,y,z)$}
+%    queue.pop();\\
+%    \ForAll{neighbors of first\_element}{
+%      \tcc*{neighbor $\in \{(x\pm 1,y,z),(x,y\pm 1,z),(x,y,z\pm 1)\}$}
+%      \If {neighbor $\in \text{Cuboid}(x_\text{max},y_\text{max},z_\text{max})$} {
+%        %\tcc*{neighbor $(x,y,z)$ is in Cuboid-shaped input data}
+%        offset $= x_\text{max}*y_\text{max}*z+x_\text{max}*y+x$;\\
+%        neighborValue = \texttt{data}[offset];\\
+%        \If{neighborValue == 1}{
+%          neighborValue = 255;\\
+%          queue.push(neighbor);
+%        }
+%      }
+%    }
+% }
+%\end{algorithm}
+\subsection{Memory access delay}
+\begin{frame}{\insertsubsection}
+  \centering
+  \ac{mad}: Time delay of accessing data for modification in CPU core
+  \begin{table}
+    \small
+    \caption{Memory types with~\ac{mad} on Intel x86\_64 as of 2020\footnote{\url{https://stackoverflow.com/questions/4087280/approximate-cost-to-access-various-caches-and-main-memory/33065382\#33065382}}}
+    \begin{tabularx}{\textwidth}{l|l|l}
+      \textbf{Memory type}      & \textbf{size}         & \textbf{time delay} \\
+      \hline
+      CPU core register(16 register) & 1024B                 & 0ns (no port contention)\\
+      L1 data cache(L1d)        & 32\enspace\enspace KB & ca. 0.5ns (cache hit) \\
+      L2 cache(per core)        & 512\enspace KB        & ca. 3-4ns (cache hit) \\
+      \textbf{L3 cache(shared)} & 32\enspace\enspace MB & ca. 19ns (cache hit) \\
+      RAM (ie DDR4)             & 64\enspace\enspace GB & ca. 100ns
+    \end{tabularx}
+  \end{table}
+  \textit{Example}: Multiplication takes typically 1ns.\\
+  \textbf{Additionally} CPU core: port contention.
+
+  %CPU cores: On ports computation is done. 
+  %4 ports with ALU support, 2 ports for read, 1 port for write instructions.\\
+\end{frame}
+\subsection{Cache lines}
+\begin{frame}{\insertsubsection (simplified = 4 Byte) : round 1}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache4/srgcache_step0.png}\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (simplified = 4 Byte) : round 2}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache4/srgcache_step1.png}\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (simplified = 4 Byte) : round 3}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache4/srgcache_step2.png}\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (simplified = 4 Byte) : round 5}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache4/srgcache_step4.png}\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (simplified = 4 Byte) : round 9}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache4/srgcache_step8.png}\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (simplified = 4 Byte) : round 13}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache4/srgcache_step12.png}\\
+  \textbf{notable overhead}, visualization out of memory\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (real = 64 Byte) : round 1}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache64/srgcache_step0.png}\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (real = 64 Byte) : round 2}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache64/srgcache_step1.png}\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (real = 64 Byte) : round 3}
+  \centering\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgcache64/srgcache_step2.png}\\
+  \textbf{high overhead}, visualization out of memory\\
+  \rightline{\color{gray} practice}
+\end{frame}
+\begin{frame}{\insertsubsection (approximation)}
+  1.1 (shown in our paper) Worst case surface: $O_\text{max} = a^2+2$, $a$ edge length of Cube\\
+  1.2 (shown in our paper) surface doubles in every round\\
+  1.3 $a=[200,400,800] \Rightarrow O_\text{max} = [40\_000,160\_000,640\_000]$ voxel\\
+  \vspace{0.3cm}
+  2.1 position of surface voxel in queue: 12 Byte\\
+  2.2 due to 1.2: 64 byte(2x)\\
+  2.3 $\frac{\text{L3 cache size}}{\text{memory per Voxel}}=\frac{32\text{MB}}{2*64+12\text{B}} = \frac{32\text{MB}}{140\text{B}} = 239\_674 \approx 489^2$\\
+  \vspace{0.3cm}
+  %3.1 ignore that L3 cache is physically addressed (pages as continous chunks of 4KB or 4MB size mapping to RAM region)\\
+  3.1 ignore overhead for cache management (highly architecture dependent\footnote{Patterson and Hennessey Computer Organisation and Design, example \url{https://stackoverflow.com/a/12505900}})\\
+  3.2 ignore unknown influence of other processes, Kernel, ...\\
+  3.3 ignore small sizes and tips of octahedron (near min/max of y and z of the algorithm surface)
+\end{frame}
+
+%\begin{frame}{\Ac{srg} with~\ac{mad} annotated}
+%\centering
+%\SetAlCapNameFnt{\scriptsize}
+%\SetAlCapFnt{\scriptsize}
+%\begin{algorithm}[H]
+%  \DontPrintSemicolon
+%  %\algsetup{linenosize=\scriptsize}
+% \scriptsize
+%  \caption{\Ac{srg} by Adams and Bischoff} \label{alg:srg}
+%  \KwData{Vector \texttt{data} as voxels with values 0(invalid) or 1(valid)}
+%  \KwResult{Vector \texttt{data} as voxels with values 0(invalid), 1(unmarked) and 255(marked)}
+%  queue.push(seeding\_point); \tcp*{$(x,y,z)$}
+%  \While{queue.empty() == false}{
+%    first\_element =  queue.front(); \tcp*{$(x,y,z)$, \color{red}\ac{mad}}
+%    queue.pop(); \\
+%    \ForAll{neighbors of first\_element}{
+%      \tcc*{neighbor $\in \{(x\pm 1,y,z),(x,y\pm 1,z),(x,y,z\pm 1)\}$}
+%      \If {neighbor $\in \text{Cuboid}(x_\text{max},y_\text{max},z_\text{max})$} {
+%        \tcc*{neighbor $(x,y,z)$ is in Cuboid-shaped input data}
+%        offset $= x_\text{max}*y_\text{max}*z+x_\text{max}*y+x$;\\
+%        neighborValue = \texttt{data}[offset]; \tcp*{\color{red}MAD}
+%        \If{neighborValue == 1} {
+%          neighborValue = 255;\\
+%          queue.push(neighbor);
+%        }
+%      }
+%    }
+%  }
+%\end{algorithm}
+%  It depends, where elements of \textbf{queue} and \textbf{data} are!
+%\end{frame}
+
+\subsection{Scan data examples}
+\begin{frame}{\insertsubsection: Helixes}
+\begin{figure}[h]
+\centering
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+  \vskip 0pt
+    \includegraphics[width=0.9\textwidth]{images/helixd1_800.png}
+    \caption{Dilation by Cube with edge length 1.}\label{fig:helixd1_800}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering
+  \vskip 0pt
+    \includegraphics[width=0.9\textwidth]{images/helixd4_800.png}
+    \caption{Dilation by Cube with edge length 4.}\label{fig:helixd4_800}
+  \end{subfigure}%
+  %\caption{Example \texttt{Helix}, size $800\times 800\times 800$}\label{fig:helixes}%
+\end{figure}
+  edge length: 200, 400 and 800 voxel\\
+  reason: measure data-contention (on parallelization) 
+\end{frame}
+
+\begin{frame}{\insertsubsection: Maus\_mit\_Draht}
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{images/maus_mit_draht_unprocessed.png}
+  \caption{Unprocessed \texttt{maus\_mit\_draht}.}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{images/maus_mit_draht_processed.png}
+  \caption{Processed \texttt{maus\_mit\_draht}.}
+\end{subfigure}
+\end{figure}
+  reason: measure data-contention (on parallelization) 
+\end{frame}
+
+\begin{frame}{\insertsubsection: BoneMaskHigh}
+\begin{figure}
+\centering
+  \begin{subfigure}[b]{.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\textwidth]{images/bonemaskhigh_slice_unprocessed.png}
+  \caption{Slice of \texttt{BoneMaskHigh}.}
+  \end{subfigure}%
+  \begin{subfigure}[b]{.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\textwidth]{images/bonemaskhigh_unprocessed.png}
+  \caption{3D visualization of \texttt{BoneMaskHigh}.}
+  \end{subfigure}
+\end{figure}
+  reason: relation of forked structures and data-contention (on parallelization)
+\end{frame}
+
+\subsection{Results}
+\begin{frame}{\Ac{srg} performance}
+\centering
+\small
+\begin{tabularx}{\textwidth}{c|c|c|c|c}
+\centering
+\textbf{Example} & \textbf{size}[MB] & \textbf{written}[MB] & \textbf{speed}$[\frac{\texttt{voxel}}{\mu s}]$ & \textbf{time}[s]\\
+\hline
+  Helix\_D1-D5 & 7.63       & 0.007 - 0.177 & 28.1-56.6 & <3.2e-3\\
+  Helix\_D1-D5 & 61.04      & 0.014 - 0.356 & 26.8-57.9 & <6.5e-3\\
+  Helix\_D1-D5 & 488.28     & 0.03 - 0.72   & 24.5-47.2 & <15e-3 \\
+  Maus\_mit\_Draht & 472.88 & 4.9           & 51.5      & 0.10 \\
+  BoneMaskHigh & 2028.8     & 134.11        & 19.2      & 7.33
+\end{tabularx}
+\\
+  \vspace{1cm}
+  small surface in each~\ac{srg} round $\Rightarrow$ high voxel writing speed ($> 50\frac{\texttt{voxel}}{\mu s}$)\\
+  big surface in many~\ac{srg} rounds $\Rightarrow$ small voxel writing speed ($\approx 17\frac{\texttt{voxel}}{\mu s}$)
+
+\end{frame}
+\section{Parallelized Seeded Region Growing}
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+\subsection{Why parallelized Seeded Region Growing?}
+\begin{frame}{\insertsubsection}
+\centering
+  Purpose: Determine and visualize connected voxel of a 3D scan for patient treatment from a user-defined starting point.\\
+  \vspace{1cm}
+  \begin{enumerate}
+      \item simple
+      \item fast\textbf{er}: parallelized, \textbf{bigger data sets}
+      \item robust
+      \item \textbf{in-place} % limit overall memory, so no further volume allocation
+  \end{enumerate}
+\end{frame}
+\subsection{Data-contention between CPU cores}
+\begin{frame}{\insertsubsection}
+  Cache coherency by current widespread hardware (ARM, Intel, AMD): Every CPU cache must have a valid representation of current data.\\
+  Cache line in multiple L1 or L2 cache of other cores: Changes get automatically synchronized.\\
+  \vspace{1cm}
+\begin{minipage}{0.5\linewidth}
+Ideal case of 2 threads\\
+  \vspace{0.3cm}
+  \includegraphics[width=.95\linewidth]{figures/datacont2.pdf}
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+Data contention of 2 threads\\
+  \vspace{0.3cm}
+  \includegraphics[width=.95\linewidth]{figures/datacont1.pdf}
+\end{minipage}%
+\end{frame}
+\begin{frame}{\insertsubsection : step 1}
+\centering
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad1.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad2.pdf}
+  \end{subfigure}%
+  \caption{Thread A}
+\end{figure}%
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad1.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad2.pdf}
+  \end{subfigure}%
+  \caption{Thread B}
+\end{figure}%
+\end{minipage}
+\end{frame}
+\begin{frame}{\insertsubsection : step 2}
+\centering
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad2.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad3.pdf}
+  \end{subfigure}%
+  \caption{Thread A}
+\end{figure}%
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad2.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad3.pdf}
+  \end{subfigure}%
+  \caption{Thread B}
+\end{figure}%
+\end{minipage}
+\end{frame}
+\begin{frame}{\insertsubsection : step 3}
+\centering
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad3.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad4.pdf}
+  \end{subfigure}%
+  \caption{Thread A}
+\end{figure}%
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad3.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad4.pdf}
+  \end{subfigure}%
+  \caption{Thread B}
+\end{figure}%
+\end{minipage}
+\end{frame}
+\begin{frame}{\insertsubsection : step 4}
+\centering
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad4.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad5.pdf}
+  \end{subfigure}%
+  \caption{Thread A}
+\end{figure}%
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad4.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad5.pdf}
+  \end{subfigure}%
+  \caption{Thread B}
+\end{figure}%
+\end{minipage}
+forwarding data results in processing delay
+\end{frame}
+\begin{frame}{\insertsubsection : step 5}
+\centering
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad5.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontAbad6.pdf}
+  \end{subfigure}%
+  \caption{Thread A}
+\end{figure}%
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+\begin{figure}[h]%
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad5.pdf}
+  \end{subfigure}\\
+  \vspace{1cm}
+  \begin{subfigure}[b]{\linewidth}%
+  \includegraphics[width=.95\linewidth]{figures/datacontBbad6.pdf}
+  \end{subfigure}%
+  \caption{Thread B}
+\end{figure}%
+\end{minipage}
+forwarding data results in processing delay, AGAIN...
+\end{frame}
+\subsection{\texttt{simple parallel Seeded Region Growing (simpaSRG)}}
+\begin{frame}{\insertsubsection}
+  Idea for~\ac{simpa}: 
+  \begin{enumerate}
+    \item Every 1000 successfull voxel markings, try to start a new thread with~\ac{srg}.
+    \item Every thread with~\ac{srg} works independent and deactivates itself, when finding no valid voxels.
+  \end{enumerate}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 0}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads0.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 1}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads1.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 2}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads2.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 3}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads3.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 4}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads4.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 5}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads5.png}\\
+  red voxel: new thread with SRG \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 6}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads6.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 7}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads7.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 8}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads8.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 9}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads9.png}\\
+  smaller surface of red SRG $\Rightarrow$ faster growing\\
+	\rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 10}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads10.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+\begin{frame}{\texttt{simpaSRG} : round 11}
+  %\vspace{-0.5cm}
+\includegraphics[trim=5cm 0.7cm 5cm 3cm, clip, width=1\linewidth]{algorithm_visualisation/srgthreads2/srg2threads11.png}\\
+  \rightline{\color{gray} theory}
+\end{frame}
+%\SetAlCapNameFnt{\tiny}
+%\SetAlCapFnt{\tiny}
+%\SetKwProg{Fn}{Function}{}{end}
+%\SetKwFunction{FnWatcher}{FnWatcherThread}%
+%\SetKwFunction{FnWorker}{FnWorkerThread}%
+%\SetKwFunction{Deactivate}{DeactivateCurrentThread}%
+%\SetAlgoLongEnd
+%\begin{algorithm}[H]
+%  \DontPrintSemicolon
+%  \caption{\acf{simpa} 1/2} \label{alg:srgpar}
+%  \tiny
+%  \KwData{Vector \texttt{data} as voxels with values 0(invalid) or 1(valid)}
+%  \KwResult{Vector \texttt{data} as voxels with values 0(invalid), 1(unmarked) and 255(marked)}
+%  \Fn(){\FnWatcher{seedpoint,data,$\ldots$}}{
+%    read\_data\_from\_disk(); \\
+%    start \FnWorker() in new thread; \\
+%    \While{AnyWorkerThread.running == true}{
+%      sleep\_for\_100milliseconds();
+%    }
+%    save\_data\_to\_disk();
+%  }
+%  %
+%\end{algorithm}
+%\end{frame}
+%\begin{frame}{\insertsubsection (2/2)}
+%\centering
+%\SetAlCapNameFnt{\tiny}
+%\SetAlCapFnt{\tiny}
+%\SetKwProg{Fn}{Function}{}{end}
+%\SetKwFunction{FnWatcher}{FnWatcherThread}%
+%\SetKwFunction{FnWorker}{FnWorkerThread}%
+%\SetKwFunction{Deactivate}{DeactivateCurrentThread}%
+%\SetAlgoLongEnd
+%\begin{algorithm}[H]
+%  \DontPrintSemicolon
+%  \caption{\acf{simpa} 2/2} \label{alg:srgpar}
+%  \tiny
+%  \KwData{Vector \texttt{data} as voxels with values 0(invalid) or 1(valid)}
+%  \KwResult{Vector \texttt{data} as voxels with values 0(invalid), 1(unmarked) and 255(marked)}
+%  \Fn(){\FnWorker{seedpoint,data,$\ldots$}}{
+%    queue.push(seeding\_point); \\
+%    countdown = 1000; \\
+%    \While{queue.empty() == false}{
+%      first\_element =  queue.front(); \tcp*{$(x,y,z)$, \color{red}\ac{mad}}
+%      queue.pop(); \\
+%      \ForAll{neighbors of first\_element}{
+%        \tcc*{neighbor $\in \{(x\pm 1,y,z),(x,y\pm 1,z),(x,y,z\pm 1)\}$}
+%        \If {neighbor $\in \text{Cuboid}(x_\text{max},y_\text{max},z_\text{max})$} {
+%          \tcc*{neighbor $(x,y,z)$ is in Cuboid-shaped input data}
+%          offset $= x_\text{max}*y_\text{max}*z+x_\text{max}*y+x$;\\
+%          neighborValue = \texttt{data}[offset]; \tcp*{\color{red}MAD}
+%          \If{neighborValue == 1} {
+%            \eIf{countdown == 0}{
+%              countdown = 1000; \\
+%              \If{try\_to\_start\_\FnWorker() == failure}{
+%                neighborValue = 255; \\
+%                queue.push(neighbor); \\
+%                countdown = countdown-1;
+%              }
+%            }%else
+%            {
+%              neighborValue = 255; \\
+%              queue.push(neighbor); \\
+%              countdown = countdown-1;
+%            }
+%          }
+%        }
+%      }
+%    }
+%    \Deactivate();
+%  }
+%  %
+%\end{algorithm}
+%\end{frame}
+\subsection{Results}
+\begin{frame}{Result for Helixes}
+  \begin{adjustbox}{max totalsize={.9\textwidth}{.9\textheight},center}
+    {\input{plots/markVoxbytimeHelix.pgf}}
+  \end{adjustbox}
+\end{frame}
+\begin{frame}{Result for Maus\_mit\_Draht}
+  \begin{adjustbox}{max totalsize={.9\textwidth}{.7\textheight},center}
+    {\input{plots/times_Maus_mit_Draht_495846240.pgf}}
+  \end{adjustbox}\\
+  single-threaded: ca. 0.1s\\
+  multi-threaded: ca. 0.55s
+\end{frame}
+\begin{frame}{Result for BoneMaskHigh}
+  \begin{adjustbox}{max totalsize={.9\textwidth}{.7\textheight},center}
+    {\input{plots/times_BoneMaskHigh_2127360000.pgf}}
+  \end{adjustbox}\\
+  single-threaded: ca. 7.3s\\
+  multi-threaded: ca. 1s
+\end{frame}
+\begin{frame}{Summary of results}
+  \centering
+  {
+    \scriptsize
+  \begin{tabularx}{\textwidth}{@{}c@{}|@{}c@{}|@{}c@{}|@{}c@{}|@{}c@{}}
+  \textbf{Example} & \textbf{all}[MB] & \textbf{written}[MB] &
+    \textbf{speed}(1,\textbf{24}) thr & \textbf{time}[s](1,\textbf{24}) thr\\
+  \hline
+    Helix\_D1-D5 & 7.63 & 0.007 - 0.177 & (28.1-56.6, \textbf{0.015-0.37}) & (<3.2e-3,\textbf{<501e-3}) \\
+    Helix\_D1-D5 & 61.04 & 0.014 - 0.356 & (26.8-57.9, \textbf{0.03-0.73}) & (<6.5e-3, \textbf{<514e-3}) \\
+    Helix\_D1-D5 & 488.28 & 0.028 - 0.716 & (24.5-47.2,\textbf{17.2-33.2}) & (<15e-3,\textbf{<22e-3}) \\
+    Maus\_mit\_Draht & 472.88 & 4.9 & (51.5, \textbf{9.4}) & (0.10,\textbf{0.55}) \\
+    BoneMaskHigh & 2028.8 & 134.11 & (19.2, \textbf{139.4}) & (7.33, \textbf{1.01}) \\
+  \end{tabularx}
+  }
+  \\
+  \vspace{1cm}
+  \begin{enumerate}
+    \item parallelization: voxel writing speed per thread is always below $17 \frac{\text{voxel}}{\mu s}$
+    \item long tube-like structures (Helix) perform worst, at maximum roughly $0.5s$
+    \item forked structures perform best (BoneMaskHigh)
+  \end{enumerate}
+\end{frame}
+\begin{frame}{Wrap up}
+  \centering
+  \begin{enumerate}
+    \item \ac{mad} (caching) essential for performance
+    \item data-contention (cache-coherence) delays processing heavily
+    \end{enumerate}
+\end{frame}
+\begin{frame}{The end}
+  \centering
+  End, questions?
+\end{frame}
+\section{Bonus}% 
+\begin{frame}{\insertsection : Min/Max single core}
+  \centering
+  {
+    \small
+  \begin{tabularx}{\textwidth}{@{}c@{}|@{}c@{}|@{}c@{}|@{}c@{}|@{}c@{}}
+  \textbf{Example} & \textbf{all}[MB] & \textbf{written}[MB] &
+    \textbf{speed}(1,\textbf{24}) thr & \textbf{time}[s](1,\textbf{24}) thr\\
+  \hline
+%%Minimum single core voxel writing speed
+    Helix\_D1-D5 & 61.04 &  0.014 - 0.356 & (26.8-\textbf{57.9}, 0.03-0.73) & (<6.5e-3,<514e-3)\\
+%%Maximum single core voxel writing speed
+    Sphere & 512e6 &  255.66 & (\textbf{17.1}, 322.3) & (15.63, 0.83)
+  \end{tabularx}
+  }
+  \\
+  \vspace{1cm}
+  More L3 cache enables faster single-thread writing speed.
+\end{frame}
+\begin{frame}{\insertsection : Upper memory bound}
+  \scriptsize
+\begin{align}
+  O_n^{z-plane} = \begin{cases}
+    4n, &n>0\\
+    1,  &n=0
+  \end{cases}\label{eq:zplane}
+\end{align}
+The voxels above the $(z=0)$-plane in the $n-$th round are defined by $O_n^{upper} = \underbrace{(\sum_{i=1}^{n-1} 4*i)}_{=2n^2-2n} + \underbrace{(O_0^{z-plane})}_{= 1} = 2n^2 -2n +1$ and so we get
+\begin{align}
+  O_n^{upper} =
+    \begin{cases} 2n^2 -2n +1, &n>0 \\
+                            0, &n=0
+    \end{cases}\label{eq:upper}
+\end{align}
+The total surface in the $n-th$ round is given as $O_n^{SRG} = O_n^{z-plane} + 2*O_n^{upper} = 2*(2n^2 -2n +1) + 4n = 4n^2 + 2$
+\begin{align}
+  O_n^{SRG} = \begin{cases}
+    4n^2 + 2, &n>0 \\
+           1, &n=0
+  \end{cases}\label{eq:total}
+\end{align}
+reach any bound in $n=\floor{\frac{a}{2}}$ round
+\begin{align}
+  O^\text{max}_n = \begin{cases}
+    a^2+2, &a \text{ even}\\
+    (a-1)^2+2, &a \text{ odd}
+  \end{cases}\label{eq:octahedron}
+\end{align}
+\end{frame}
+\begin{frame}{\insertsection : Why do supervoxel-based approaches not work better?}
+  Supervoxel = cuboid-shaped region containing multiple voxel\\
+  A path may be constructable via a neighbor-supervoxel to 2 distinct voxel regions in a supervoxel.\\
+  1. Either keep track of all regions, which is costly\\
+  2. Or multiple processing necessary => What is the advantage to "regular SRG"?
+\end{frame}
+\begin{frame}{\insertsection : Optimise space usage}
+  \footnotesize
+  Currently we use a queue of position = $(x,y,z)$ = (\texttt{int32,int32,int32}).\\
+  It is enough to save a queue of \texttt{offset} = (\texttt{int32}) and use
+  \begin{align}
+    xy_\text{max} &= x_\text{max}*y_\text{max}\\
+    z &= \frac{\texttt{offset\_copy}}{xy_\text{max}}\\
+    \texttt{offset\_copy} &-= z*xy_\text{max}\\
+    y &= \frac{\texttt{offset\_copy}}{x_\text{max}}\\
+    \texttt{offset\_copy} &-= y*x_\text{max}\\
+    x &= \texttt{offset\_copy}
+  \end{align}
+  \begin{align}
+    x_{\pm} &= \texttt{offset} \pm 1\\
+    y_{\pm} &= \texttt{offset} \pm x_\text{max}\\
+    z_{\pm} &= \texttt{offset} \pm xy_\text{max}
+  \end{align}
+  Only using 4 Byte per position: $\frac{32\text{MB}}{132\text{B}} = 254\_200 \approx 504^2 > 489^2$.\\
+  Using new desktop CPU (256MB L3 cache): $\frac{256\text{MB}}{132\text{B}} = 2\_033\_601 \approx 1426^2$.
+\end{frame}
+\begin{frame}{\insertsection : Optimize cache lines}
+  Adjust data (with empty data) to be dividable by 64 on x-coordinate for cache locality and bit shifting $y_\pm$ instead of multiplication. 
+  Ideally also applied on y and z to a power of 2 to use almost only bit shifting and bit masks instead of arithmetic operations.
+  \tikzcuboid{100}{20}{30}{0.07}\\
+  \tikzcuboid{128}{20}{30}{0.07}
+\end{frame}
+\begin{frame}{\insertsection : Fixing data-contention}
+  1. Mitigation: identify approximately going along tubes by frequent check of queue size and distance\\
+  2. Fix: Use hardware+software for special data merging on CPU core cache eviction:\\
+  \centering
+\begin{figure}[h]
+  \begin{subfigure}[b]{.5\linewidth}%
+  \centering
+  \includegraphics[width=.95\linewidth]{figures/datacontfixA.pdf}
+  \caption{Thread A}
+  \end{subfigure}%
+  \begin{subfigure}[b]{.5\linewidth}%
+  \centering
+  \includegraphics[width=.95\linewidth]{figures/datacontfixB.pdf}
+  \caption{Thread B}
+  \end{subfigure}
+  \caption*{}
+\end{figure}
+  \vspace{-1.2cm}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.5\linewidth]{figures/datacontfixRES.pdf}
+  \caption*{result}
+\end{figure}
+  $\Rightarrow$ Write cache memory as bit-wise OR, how much additional hardware complexity? 
+\end{frame}
+\begin{frame}{\insertsection : Environment and hardware}
+  1. Other programs can interfere in the cache or execution: On Linux use \texttt{isolcpus} kernel option parameter and \texttt{taskset} or dynamically with \texttt{cset} for reserving CPU cores\\
+  2. Micro-architecture-specific optimizations, ie to mitigate port-contention: \texttt{-march=corei7-avx}\\
+  %3. SIMD instructions for computing multiple offsets\\
+\end{frame}
+\begin{frame}{\insertsection : Can we disable cache?}
+  In good case \textasciitilde 40 GB/s is throughput limit to get data into (L3) cache
+  $\frac{40\text{GB}}{s}*\frac{\text{voxel}}{64\text{B}}$ = $655\_360 \frac{\text{voxel}}{s} \approx 0.65\frac{\text{voxel}}{\mu s}$\par
+  Worst single thread performance ca. $17 \frac{\text{voxel}}{\mu s}$
+\end{frame}
+
+%0. why SRG? simplicity, speed (orally why)
+%why parallelization? (making things faster)
+%1. SRG algo (+graphics)
+%1.1 effect caching: Graphic with speed comparison
+%Explanation on algorithm (queue, take position from queue, compute neighbors, fetch neighbor values, compare ...)
+%1.2. good parallizable, small realistic example
+%2. simpaSRG (algo only)
+%2.1 data-contention between threads
+%2.2 good, bad realistic example
+%3. summary (simple parallelization feasible, data-contention problem on tube-like (not forked!) structures,
+%  
+%(( in the work I additionally show how we could do better than the cache controller on having control over cache ))
+%(( However its extremely hard to make estimations without knowledge what exactly happens in the cache ))
+%(( FINAL STATEMENT: Overall CPU data throughput is saturated => cache control + SIMD needed )) 
+\end{document}
+%bonus: upper memmory bound
+%optimal algorithm
+%exact results
+%more plots

@@ -1,0 +1,12 @@
+\begin{tikzpicture}[every node/.style={minimum size=.5cm-\pgflinewidth, outer sep=0pt}]%
+    \node[] at (0.25,+0.75) {};
+    \node[fill=gray] at (0.75,+0.75) {};
+    \node[fill=lightgray] at (1.25,+0.75) {};
+    \node[] at (0.75,+0.25) {?};
+    \node[fill=lightgray] at (0.75,+1.25) {};
+    \node[] at (1.75,+0.75) {};
+    \node[fill=lightgray] at (1.25,+1.25) {};
+    \node[] at (1.75,+1.25) {};
+    \draw[step=0.5cm,color=black] (0,0) grid (2,2);
+    \draw[color=red,line width=0.5mm] (0.525,0.525) rectangle +(0.45,0.45);
+\end{tikzpicture}%

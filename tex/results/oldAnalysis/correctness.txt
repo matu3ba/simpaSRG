@@ -1,0 +1,7 @@
+../data/BoneMaskHigh_simpleSRG.img ../data/BoneMaskHigh_simpaSRG8.img identical
+../data/CubeFull_simpleSRG.img ../data/CubeFull_simpaSRG8.img identical
+../data/Head of mouse_simpleSRG.img ../data/Head of mouse_simpaSRG8.img identical
+../data/Maus mit Draht_simpleSRG.img ../data/Maus mit Draht_simpaSRG8.img identical
+../data/Skeleton_simpleSRG.img ../data/Skeleton_simpaSRG8.img identical
+../data/Skull of mouse_simpleSRG.img ../data/Skull of mouse_simpaSRG8.img identical
+../data/SphereFull_simpleSRG.img ../data/SphereFull_simpaSRG8.img identical

@@ -1,0 +1,1461 @@
+simpleSRG, BoneMaskHigh, 2127360000, 1, 11247988
+simpleSRG, Head of mouse, 350280000, 1, 7880270
+simpleSRG, Maus mit Draht, 495846240, 1, 110245
+simpleSRG, Skeleton, 26250510, 1, 5608
+simpleSRG, Skull of mouse, 350280000, 1, 319117
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7676301
+simpleSRG, Head of mouse, 350280000, 1, 8809596
+simpleSRG, Maus mit Draht, 495846240, 1, 137076
+simpleSRG, Skeleton, 26250510, 1, 8818
+simpleSRG, Skull of mouse, 350280000, 1, 419638
+simpleSRG, CubeFull, 1000000000, 1, 48654401
+simpleSRG, SphereFull, 1000000000, 1, 24844394
+simpleSRG, Helix_D1, 1000000000, 1, 51160
+simpleSRG, Helix_D2, 1000000000, 1, 75547
+simpleSRG, Helix_D3, 1000000000, 1, 97707
+simpleSRG, Helix_D4, 1000000000, 1, 119885
+simpleSRG, Helix_D5, 1000000000, 1, 140389
+simpleSRG, Helix_D6, 1000000000, 1, 167013
+simpleSRG, Helix_D7, 1000000000, 1, 184982
+simpleSRG, Helix_D8, 1000000000, 1, 210744
+simpleSRG, Helix_D9, 1000000000, 1, 227247
+simpleSRG, Helix_D10, 1000000000, 1, 241253
+simpleSRG, Helix_D11, 1000000000, 1, 268745
+simpleSRG, Helix_D12, 1000000000, 1, 308650
+simpleSRG, Helix_D13, 1000000000, 1, 327431
+simpleSRG, Helix_D14, 1000000000, 1, 346134
+simpleSRG, Helix_D15, 1000000000, 1, 369508
+simpleSRG, Helix_D16, 1000000000, 1, 407528
+simpleSRG, Helix_D17, 1000000000, 1, 438224
+simpleSRG, Helix_D18, 1000000000, 1, 478838
+simpleSRG, Helix_D19, 1000000000, 1, 514868
+simpleSRG, Helix_D20, 1000000000, 1, 547408
+simpleSRG, Helix_D21, 1000000000, 1, 579471
+simpleSRG, Helix_D22, 1000000000, 1, 636769
+simpleSRG, Helix_D23, 1000000000, 1, 695304
+simpleSRG, Helix_D24, 1000000000, 1, 741083
+simpleSRG, Helix_D25, 1000000000, 1, 801210
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6725338
+simpleSRG, Head of mouse, 350280000, 1, 7214920
+simpleSRG, Maus mit Draht, 495846240, 1, 105258
+simpleSRG, Skeleton, 26250510, 1, 5053
+simpleSRG, Skull of mouse, 350280000, 1, 282727
+simpleSRG, CubeFull, 512000000, 1, 24247624
+simpleSRG, SphereFull, 512000000, 1, 12428731
+simpleSRG, Helix_D1, 512000000, 1, 31704
+simpleSRG, Helix_D2, 512000000, 1, 45482
+simpleSRG, Helix_D3, 512000000, 1, 56648
+simpleSRG, Helix_D4, 512000000, 1, 69006
+simpleSRG, Helix_D5, 512000000, 1, 88959
+simpleSRG, Helix_D6, 512000000, 1, 102627
+simpleSRG, Helix_D7, 512000000, 1, 111594
+simpleSRG, Helix_D8, 512000000, 1, 131976
+simpleSRG, Helix_D9, 512000000, 1, 142718
+simpleSRG, Helix_D10, 512000000, 1, 155138
+simpleSRG, Helix_D11, 512000000, 1, 173129
+simpleSRG, Helix_D12, 512000000, 1, 174162
+simpleSRG, Helix_D13, 512000000, 1, 197393
+simpleSRG, Helix_D14, 512000000, 1, 209442
+simpleSRG, Helix_D15, 512000000, 1, 221818
+simpleSRG, Helix_D16, 512000000, 1, 239571
+simpleSRG, Helix_D17, 512000000, 1, 257712
+simpleSRG, Helix_D18, 512000000, 1, 279071
+simpleSRG, Helix_D19, 512000000, 1, 305014
+simpleSRG, Helix_D20, 512000000, 1, 322610
+simpleSRG, Helix_D21, 512000000, 1, 339491
+simpleSRG, Helix_D22, 512000000, 1, 371424
+simpleSRG, Helix_D23, 512000000, 1, 387113
+simpleSRG, Helix_D24, 512000000, 1, 426720
+simpleSRG, Helix_D25, 512000000, 1, 455189
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6146763
+simpleSRG, Head of mouse, 350280000, 1, 7186874
+simpleSRG, Maus mit Draht, 495846240, 1, 97970
+simpleSRG, Skeleton, 26250510, 1, 5652
+simpleSRG, Skull of mouse, 350280000, 1, 277770
+simpleSRG, CubeFull, 8000000, 1, 132129
+simpleSRG, SphereFull, 8000000, 1, 61571
+simpleSRG, Helix_D1, 8000000, 1, 1520
+simpleSRG, Helix_D2, 8000000, 1, 2815
+simpleSRG, Helix_D3, 8000000, 1, 3475
+simpleSRG, Helix_D4, 8000000, 1, 4555
+simpleSRG, Helix_D5, 8000000, 1, 5501
+simpleSRG, Helix_D6, 8000000, 1, 5618
+simpleSRG, Helix_D7, 8000000, 1, 6914
+simpleSRG, Helix_D8, 8000000, 1, 7387
+simpleSRG, Helix_D9, 8000000, 1, 8031
+simpleSRG, Helix_D10, 8000000, 1, 8855
+simpleSRG, Helix_D11, 8000000, 1, 10304
+simpleSRG, Helix_D12, 8000000, 1, 11448
+simpleSRG, Helix_D13, 8000000, 1, 12081
+simpleSRG, Helix_D14, 8000000, 1, 13567
+simpleSRG, Helix_D15, 8000000, 1, 14340
+simpleSRG, Helix_D16, 8000000, 1, 15426
+simpleSRG, Helix_D17, 8000000, 1, 16444
+simpleSRG, Helix_D18, 8000000, 1, 17846
+simpleSRG, Helix_D19, 8000000, 1, 18839
+simpleSRG, Helix_D20, 8000000, 1, 20663
+simpleSRG, Helix_D21, 8000000, 1, 23035
+simpleSRG, Helix_D22, 8000000, 1, 23077
+simpleSRG, Helix_D23, 8000000, 1, 24934
+simpleSRG, Helix_D24, 8000000, 1, 26324
+simpleSRG, Helix_D25, 8000000, 1, 28415
+simpleSRG, CubeFull, 8000000, 1, 143145
+simpleSRG, SphereFull, 8000000, 1, 61358
+simpleSRG, Helix_D1, 8000000, 1, 1427
+simpleSRG, Helix_D2, 8000000, 1, 2463
+simpleSRG, Helix_D3, 8000000, 1, 3306
+simpleSRG, Helix_D4, 8000000, 1, 3801
+simpleSRG, Helix_D5, 8000000, 1, 4595
+simpleSRG, Helix_D6, 8000000, 1, 5538
+simpleSRG, Helix_D7, 8000000, 1, 7025
+simpleSRG, Helix_D8, 8000000, 1, 7714
+simpleSRG, Helix_D9, 8000000, 1, 8258
+simpleSRG, Helix_D10, 8000000, 1, 9800
+simpleSRG, Helix_D11, 8000000, 1, 9904
+simpleSRG, Helix_D12, 8000000, 1, 11488
+simpleSRG, Helix_D13, 8000000, 1, 12313
+simpleSRG, Helix_D14, 8000000, 1, 12798
+simpleSRG, Helix_D15, 8000000, 1, 14343
+simpleSRG, Helix_D16, 8000000, 1, 15913
+simpleSRG, Helix_D17, 8000000, 1, 17581
+simpleSRG, Helix_D18, 8000000, 1, 18263
+simpleSRG, Helix_D19, 8000000, 1, 18713
+simpleSRG, Helix_D20, 8000000, 1, 20844
+simpleSRG, Helix_D21, 8000000, 1, 20563
+simpleSRG, Helix_D22, 8000000, 1, 22019
+simpleSRG, Helix_D23, 8000000, 1, 23952
+simpleSRG, Helix_D24, 8000000, 1, 27357
+simpleSRG, Helix_D25, 8000000, 1, 25852
+simpleSRG, CubeFull, 8000000, 1, 168083
+simpleSRG, SphereFull, 8000000, 1, 74344
+simpleSRG, Helix_D1, 8000000, 1, 1548
+simpleSRG, Helix_D2, 8000000, 1, 2332
+simpleSRG, Helix_D3, 8000000, 1, 3408
+simpleSRG, Helix_D4, 8000000, 1, 4677
+simpleSRG, Helix_D5, 8000000, 1, 5039
+simpleSRG, Helix_D6, 8000000, 1, 5815
+simpleSRG, Helix_D7, 8000000, 1, 6774
+simpleSRG, Helix_D8, 8000000, 1, 7721
+simpleSRG, Helix_D9, 8000000, 1, 9016
+simpleSRG, Helix_D10, 8000000, 1, 10603
+simpleSRG, Helix_D11, 8000000, 1, 11202
+simpleSRG, Helix_D12, 8000000, 1, 12347
+simpleSRG, Helix_D13, 8000000, 1, 13083
+simpleSRG, Helix_D14, 8000000, 1, 14858
+simpleSRG, Helix_D15, 8000000, 1, 15769
+simpleSRG, Helix_D16, 8000000, 1, 16648
+simpleSRG, Helix_D17, 8000000, 1, 18838
+simpleSRG, Helix_D18, 8000000, 1, 19062
+simpleSRG, Helix_D19, 8000000, 1, 20575
+simpleSRG, Helix_D20, 8000000, 1, 23701
+simpleSRG, Helix_D21, 8000000, 1, 23907
+simpleSRG, Helix_D22, 8000000, 1, 25204
+simpleSRG, Helix_D23, 8000000, 1, 27889
+simpleSRG, Helix_D24, 8000000, 1, 28966
+simpleSRG, Helix_D25, 8000000, 1, 30630
+simpleSRG, CubeFull, 8000000, 1, 143870
+simpleSRG, SphereFull, 8000000, 1, 69491
+simpleSRG, Helix_D1, 8000000, 1, 1829
+simpleSRG, Helix_D2, 8000000, 1, 2279
+simpleSRG, Helix_D3, 8000000, 1, 3521
+simpleSRG, Helix_D4, 8000000, 1, 4134
+simpleSRG, Helix_D5, 8000000, 1, 5190
+simpleSRG, Helix_D6, 8000000, 1, 6142
+simpleSRG, Helix_D7, 8000000, 1, 6428
+simpleSRG, Helix_D8, 8000000, 1, 8344
+simpleSRG, Helix_D9, 8000000, 1, 7958
+simpleSRG, Helix_D10, 8000000, 1, 9197
+simpleSRG, Helix_D11, 8000000, 1, 10075
+simpleSRG, Helix_D12, 8000000, 1, 10595
+simpleSRG, Helix_D13, 8000000, 1, 12639
+simpleSRG, Helix_D14, 8000000, 1, 14056
+simpleSRG, Helix_D15, 8000000, 1, 15206
+simpleSRG, Helix_D16, 8000000, 1, 16081
+simpleSRG, Helix_D17, 8000000, 1, 16924
+simpleSRG, Helix_D18, 8000000, 1, 17598
+simpleSRG, Helix_D19, 8000000, 1, 18869
+simpleSRG, Helix_D20, 8000000, 1, 20825
+simpleSRG, Helix_D21, 8000000, 1, 21072
+simpleSRG, Helix_D22, 8000000, 1, 24736
+simpleSRG, Helix_D23, 8000000, 1, 25577
+simpleSRG, Helix_D24, 8000000, 1, 25100
+simpleSRG, Helix_D25, 8000000, 1, 26414
+simpleSRG, CubeFull, 8000000, 1, 144568
+simpleSRG, SphereFull, 8000000, 1, 64559
+simpleSRG, Helix_D1, 8000000, 1, 1544
+simpleSRG, Helix_D2, 8000000, 1, 2729
+simpleSRG, Helix_D3, 8000000, 1, 3294
+simpleSRG, Helix_D4, 8000000, 1, 3930
+simpleSRG, Helix_D5, 8000000, 1, 4898
+simpleSRG, Helix_D6, 8000000, 1, 6139
+simpleSRG, Helix_D7, 8000000, 1, 6835
+simpleSRG, Helix_D8, 8000000, 1, 7772
+simpleSRG, Helix_D9, 8000000, 1, 9210
+simpleSRG, Helix_D10, 8000000, 1, 9921
+simpleSRG, Helix_D11, 8000000, 1, 11321
+simpleSRG, Helix_D12, 8000000, 1, 12015
+simpleSRG, Helix_D13, 8000000, 1, 14133
+simpleSRG, Helix_D14, 8000000, 1, 14058
+simpleSRG, Helix_D15, 8000000, 1, 15845
+simpleSRG, Helix_D16, 8000000, 1, 16583
+simpleSRG, Helix_D17, 8000000, 1, 18510
+simpleSRG, Helix_D18, 8000000, 1, 19557
+simpleSRG, Helix_D19, 8000000, 1, 21257
+simpleSRG, Helix_D20, 8000000, 1, 22216
+simpleSRG, Helix_D21, 8000000, 1, 24095
+simpleSRG, Helix_D22, 8000000, 1, 24863
+simpleSRG, Helix_D23, 8000000, 1, 26382
+simpleSRG, Helix_D24, 8000000, 1, 30045
+simpleSRG, Helix_D25, 8000000, 1, 32290
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10744091
+simpleSRG, Head of mouse, 350280000, 1, 12332193
+simpleSRG, Maus mit Draht, 495846240, 1, 182790
+simpleSRG, Skeleton, 26250510, 1, 7132
+simpleSRG, Skull of mouse, 350280000, 1, 512563
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10528379
+simpleSRG, Head of mouse, 350280000, 1, 8852559
+simpleSRG, Maus mit Draht, 495846240, 1, 107188
+simpleSRG, Skeleton, 26250510, 1, 4581
+simpleSRG, Skull of mouse, 350280000, 1, 287082
+simpleSRG, CubeFull, 512000000, 1, 24190082
+simpleSRG, SphereFull, 512000000, 1, 12522038
+simpleSRG, Helix_D1, 512000000, 1, 32380
+simpleSRG, Helix_D2, 512000000, 1, 44064
+simpleSRG, Helix_D3, 512000000, 1, 57165
+simpleSRG, Helix_D4, 512000000, 1, 68894
+simpleSRG, Helix_D5, 512000000, 1, 82017
+simpleSRG, Helix_D6, 512000000, 1, 96463
+simpleSRG, Helix_D7, 512000000, 1, 111840
+simpleSRG, Helix_D8, 512000000, 1, 126557
+simpleSRG, Helix_D9, 512000000, 1, 137290
+simpleSRG, Helix_D10, 512000000, 1, 153379
+simpleSRG, Helix_D11, 512000000, 1, 164048
+simpleSRG, Helix_D12, 512000000, 1, 178643
+simpleSRG, Helix_D13, 512000000, 1, 190631
+simpleSRG, Helix_D14, 512000000, 1, 208056
+simpleSRG, Helix_D15, 512000000, 1, 227316
+simpleSRG, Helix_D16, 512000000, 1, 243321
+simpleSRG, Helix_D17, 512000000, 1, 259936
+simpleSRG, Helix_D18, 512000000, 1, 288594
+simpleSRG, Helix_D19, 512000000, 1, 291684
+simpleSRG, Helix_D20, 512000000, 1, 308495
+simpleSRG, Helix_D21, 512000000, 1, 335761
+simpleSRG, Helix_D22, 512000000, 1, 367938
+simpleSRG, Helix_D23, 512000000, 1, 386663
+simpleSRG, Helix_D24, 512000000, 1, 422542
+simpleSRG, Helix_D25, 512000000, 1, 459588
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10923833
+simpleSRG, Head of mouse, 350280000, 1, 11649975
+simpleSRG, Maus mit Draht, 495846240, 1, 190324
+simpleSRG, Skeleton, 26250510, 1, 7224
+simpleSRG, Skull of mouse, 350280000, 1, 551022
+simpleSRG, CubeFull, 8000000, 1, 262241
+simpleSRG, SphereFull, 8000000, 1, 112702
+simpleSRG, Helix_D1, 8000000, 1, 2563
+simpleSRG, Helix_D2, 8000000, 1, 4469
+simpleSRG, Helix_D3, 8000000, 1, 5871
+simpleSRG, Helix_D4, 8000000, 1, 7795
+simpleSRG, Helix_D5, 8000000, 1, 8299
+simpleSRG, Helix_D6, 8000000, 1, 10561
+simpleSRG, Helix_D7, 8000000, 1, 11586
+simpleSRG, Helix_D8, 8000000, 1, 13918
+simpleSRG, Helix_D9, 8000000, 1, 17270
+simpleSRG, Helix_D10, 8000000, 1, 17504
+simpleSRG, Helix_D11, 8000000, 1, 18710
+simpleSRG, Helix_D12, 8000000, 1, 24716
+simpleSRG, Helix_D13, 8000000, 1, 28069
+simpleSRG, Helix_D14, 8000000, 1, 29427
+simpleSRG, Helix_D15, 8000000, 1, 32520
+simpleSRG, Helix_D16, 8000000, 1, 28351
+simpleSRG, Helix_D17, 8000000, 1, 30370
+simpleSRG, Helix_D18, 8000000, 1, 32676
+simpleSRG, Helix_D19, 8000000, 1, 38623
+simpleSRG, Helix_D20, 8000000, 1, 67887
+simpleSRG, Helix_D21, 8000000, 1, 50051
+simpleSRG, Helix_D22, 8000000, 1, 59617
+simpleSRG, Helix_D23, 8000000, 1, 74875
+simpleSRG, Helix_D24, 8000000, 1, 53747
+simpleSRG, Helix_D25, 8000000, 1, 97927
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7189218
+simpleSRG, Head of mouse, 350280000, 1, 8115569
+simpleSRG, Maus mit Draht, 495846240, 1, 107488
+simpleSRG, Skeleton, 26250510, 1, 3973
+simpleSRG, Skull of mouse, 350280000, 1, 347981
+simpleSRG, CubeFull, 8000000, 1, 154672
+simpleSRG, SphereFull, 8000000, 1, 75684
+simpleSRG, Helix_D1, 8000000, 1, 1817
+simpleSRG, Helix_D2, 8000000, 1, 3285
+simpleSRG, Helix_D3, 8000000, 1, 3720
+simpleSRG, Helix_D4, 8000000, 1, 4992
+simpleSRG, Helix_D5, 8000000, 1, 5205
+simpleSRG, Helix_D6, 8000000, 1, 6410
+simpleSRG, Helix_D7, 8000000, 1, 7192
+simpleSRG, Helix_D8, 8000000, 1, 8404
+simpleSRG, Helix_D9, 8000000, 1, 9140
+simpleSRG, Helix_D10, 8000000, 1, 10715
+simpleSRG, Helix_D11, 8000000, 1, 10588
+simpleSRG, Helix_D12, 8000000, 1, 11611
+simpleSRG, Helix_D13, 8000000, 1, 12935
+simpleSRG, Helix_D14, 8000000, 1, 15125
+simpleSRG, Helix_D15, 8000000, 1, 14525
+simpleSRG, Helix_D16, 8000000, 1, 16110
+simpleSRG, Helix_D17, 8000000, 1, 17155
+simpleSRG, Helix_D18, 8000000, 1, 20233
+simpleSRG, Helix_D19, 8000000, 1, 20665
+simpleSRG, Helix_D20, 8000000, 1, 22608
+simpleSRG, Helix_D21, 8000000, 1, 22180
+simpleSRG, Helix_D22, 8000000, 1, 24002
+simpleSRG, Helix_D23, 8000000, 1, 27417
+simpleSRG, Helix_D24, 8000000, 1, 28683
+simpleSRG, Helix_D25, 8000000, 1, 27929
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6477972
+simpleSRG, Head of mouse, 350280000, 1, 7331588
+simpleSRG, Maus mit Draht, 495846240, 1, 106167
+simpleSRG, Skeleton, 26250510, 1, 3927
+simpleSRG, Skull of mouse, 350280000, 1, 292258
+simpleSRG, CubeFull, 8000000, 1, 135271
+simpleSRG, SphereFull, 8000000, 1, 67640
+simpleSRG, Helix_D1, 8000000, 1, 1452
+simpleSRG, Helix_D2, 8000000, 1, 2428
+simpleSRG, Helix_D3, 8000000, 1, 2913
+simpleSRG, Helix_D4, 8000000, 1, 3568
+simpleSRG, Helix_D5, 8000000, 1, 4567
+simpleSRG, Helix_D6, 8000000, 1, 6042
+simpleSRG, Helix_D7, 8000000, 1, 8578
+simpleSRG, Helix_D8, 8000000, 1, 8909
+simpleSRG, Helix_D9, 8000000, 1, 10896
+simpleSRG, Helix_D10, 8000000, 1, 8501
+simpleSRG, Helix_D11, 8000000, 1, 9386
+simpleSRG, Helix_D12, 8000000, 1, 10273
+simpleSRG, Helix_D13, 8000000, 1, 13770
+simpleSRG, Helix_D14, 8000000, 1, 13666
+simpleSRG, Helix_D15, 8000000, 1, 13319
+simpleSRG, Helix_D16, 8000000, 1, 16001
+simpleSRG, Helix_D17, 8000000, 1, 17922
+simpleSRG, Helix_D18, 8000000, 1, 16666
+simpleSRG, Helix_D19, 8000000, 1, 20415
+simpleSRG, Helix_D20, 8000000, 1, 18809
+simpleSRG, Helix_D21, 8000000, 1, 23138
+simpleSRG, Helix_D22, 8000000, 1, 26654
+simpleSRG, Helix_D23, 8000000, 1, 24940
+simpleSRG, Helix_D24, 8000000, 1, 27082
+simpleSRG, Helix_D25, 8000000, 1, 26912
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6560024
+simpleSRG, Head of mouse, 350280000, 1, 7738365
+simpleSRG, Maus mit Draht, 495846240, 1, 178957
+simpleSRG, Skeleton, 26250510, 1, 7355
+simpleSRG, Skull of mouse, 350280000, 1, 571202
+simpleSRG, CubeFull, 8000000, 1, 147453
+simpleSRG, SphereFull, 8000000, 1, 70482
+simpleSRG, Helix_D1, 8000000, 1, 229
+simpleSRG, Helix_D2, 8000000, 1, 744
+simpleSRG, Helix_D3, 8000000, 1, 638
+simpleSRG, Helix_D4, 8000000, 1, 1124
+simpleSRG, Helix_D5, 8000000, 1, 1080
+simpleSRG, Helix_D6, 8000000, 1, 816
+simpleSRG, Helix_D7, 8000000, 1, 2626
+simpleSRG, Helix_D8, 8000000, 1, 3461
+simpleSRG, Helix_D9, 8000000, 1, 1671
+simpleSRG, Helix_D10, 8000000, 1, 1806
+simpleSRG, Helix_D11, 8000000, 1, 4697
+simpleSRG, Helix_D12, 8000000, 1, 5720
+simpleSRG, Helix_D13, 8000000, 1, 6247
+simpleSRG, Helix_D14, 8000000, 1, 6270
+simpleSRG, Helix_D15, 8000000, 1, 6643
+simpleSRG, Helix_D16, 8000000, 1, 7145
+simpleSRG, Helix_D17, 8000000, 1, 7675
+simpleSRG, Helix_D18, 8000000, 1, 8983
+simpleSRG, Helix_D19, 8000000, 1, 12073
+simpleSRG, Helix_D20, 8000000, 1, 14380
+simpleSRG, Helix_D21, 8000000, 1, 15086
+simpleSRG, Helix_D22, 8000000, 1, 15877
+simpleSRG, Helix_D23, 8000000, 1, 18379
+simpleSRG, Helix_D24, 8000000, 1, 16898
+simpleSRG, Helix_D25, 8000000, 1, 20966
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10585202
+simpleSRG, Head of mouse, 350280000, 1, 12255151
+simpleSRG, Maus mit Draht, 495846240, 1, 176802
+simpleSRG, Skeleton, 26250510, 1, 7549
+simpleSRG, Skull of mouse, 350280000, 1, 513696
+simpleSRG, CubeFull, 8000000, 1, 147092
+simpleSRG, SphereFull, 8000000, 1, 71814
+simpleSRG, Helix_D2, 8000000, 1, 546
+simpleSRG, Helix_D3, 8000000, 1, 662
+simpleSRG, Helix_D4, 8000000, 1, 1161
+simpleSRG, Helix_D5, 8000000, 1, 818
+simpleSRG, Helix_D6, 8000000, 1, 795
+simpleSRG, Helix_D7, 8000000, 1, 2744
+simpleSRG, Helix_D8, 8000000, 1, 3315
+simpleSRG, Helix_D9, 8000000, 1, 1807
+simpleSRG, Helix_D10, 8000000, 1, 1816
+simpleSRG, Helix_D11, 8000000, 1, 4537
+simpleSRG, Helix_D12, 8000000, 1, 5155
+simpleSRG, Helix_D13, 8000000, 1, 5586
+simpleSRG, Helix_D14, 8000000, 1, 6066
+simpleSRG, Helix_D15, 8000000, 1, 8943
+simpleSRG, Helix_D16, 8000000, 1, 7858
+simpleSRG, Helix_D17, 8000000, 1, 7424
+simpleSRG, Helix_D18, 8000000, 1, 9633
+simpleSRG, Helix_D19, 8000000, 1, 10568
+simpleSRG, Helix_D20, 8000000, 1, 12817
+simpleSRG, Helix_D21, 8000000, 1, 13877
+simpleSRG, Helix_D22, 8000000, 1, 14947
+simpleSRG, Helix_D23, 8000000, 1, 16976
+simpleSRG, Helix_D24, 8000000, 1, 18265
+simpleSRG, Helix_D25, 8000000, 1, 20035
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7341988
+simpleSRG, Head of mouse, 350280000, 1, 8221103
+simpleSRG, Maus mit Draht, 495846240, 1, 104308
+simpleSRG, Skeleton, 26250510, 1, 3949
+simpleSRG, Skull of mouse, 350280000, 1, 309117
+simpleSRG, CubeFull, 8000000, 1, 173573
+simpleSRG, SphereFull, 8000000, 1, 74174
+simpleSRG, Helix_D2, 8000000, 1, 460
+simpleSRG, Helix_D3, 8000000, 1, 653
+simpleSRG, Helix_D4, 8000000, 1, 1438
+simpleSRG, Helix_D5, 8000000, 1, 976
+simpleSRG, Helix_D6, 8000000, 1, 920
+simpleSRG, Helix_D7, 8000000, 1, 2954
+simpleSRG, Helix_D8, 8000000, 1, 3277
+simpleSRG, Helix_D9, 8000000, 1, 2294
+simpleSRG, Helix_D10, 8000000, 1, 2132
+simpleSRG, Helix_D11, 8000000, 1, 5427
+simpleSRG, Helix_D12, 8000000, 1, 6255
+simpleSRG, Helix_D13, 8000000, 1, 6408
+simpleSRG, Helix_D14, 8000000, 1, 7220
+simpleSRG, Helix_D15, 8000000, 1, 7233
+simpleSRG, Helix_D16, 8000000, 1, 8235
+simpleSRG, Helix_D17, 8000000, 1, 8848
+simpleSRG, Helix_D18, 8000000, 1, 10120
+simpleSRG, Helix_D19, 8000000, 1, 12097
+simpleSRG, Helix_D20, 8000000, 1, 14654
+simpleSRG, Helix_D21, 8000000, 1, 15927
+simpleSRG, Helix_D22, 8000000, 1, 22406
+simpleSRG, Helix_D23, 8000000, 1, 22396
+simpleSRG, Helix_D24, 8000000, 1, 22722
+simpleSRG, Helix_D25, 8000000, 1, 24285
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7696530
+simpleSRG, Head of mouse, 350280000, 1, 8331422
+simpleSRG, Maus mit Draht, 495846240, 1, 105673
+simpleSRG, Skeleton, 26250510, 1, 3971
+simpleSRG, Skull of mouse, 350280000, 1, 311995
+simpleSRG, CubeFull, 8000000, 1, 163673
+simpleSRG, SphereFull, 8000000, 1, 68345
+simpleSRG, Helix_D2, 8000000, 1, 460
+simpleSRG, Helix_D3, 8000000, 1, 723
+simpleSRG, Helix_D4, 8000000, 1, 1141
+simpleSRG, Helix_D5, 8000000, 1, 869
+simpleSRG, Helix_D6, 8000000, 1, 937
+simpleSRG, Helix_D7, 8000000, 1, 3546
+simpleSRG, Helix_D8, 8000000, 1, 3386
+simpleSRG, Helix_D9, 8000000, 1, 1975
+simpleSRG, Helix_D10, 8000000, 1, 3272
+simpleSRG, Helix_D11, 8000000, 1, 6386
+simpleSRG, Helix_D12, 8000000, 1, 6624
+simpleSRG, Helix_D13, 8000000, 1, 7932
+simpleSRG, Helix_D14, 8000000, 1, 7709
+simpleSRG, Helix_D15, 8000000, 1, 9465
+simpleSRG, Helix_D16, 8000000, 1, 10033
+simpleSRG, Helix_D17, 8000000, 1, 11387
+simpleSRG, Helix_D18, 8000000, 1, 12544
+simpleSRG, Helix_D19, 8000000, 1, 16972
+simpleSRG, Helix_D20, 8000000, 1, 18401
+simpleSRG, Helix_D21, 8000000, 1, 19399
+simpleSRG, Helix_D22, 8000000, 1, 21255
+simpleSRG, Helix_D23, 8000000, 1, 23437
+simpleSRG, Helix_D24, 8000000, 1, 23513
+simpleSRG, Helix_D25, 8000000, 1, 23929
+simpleSRG, BoneMaskHigh, 2127360000, 1, 8182355
+simpleSRG, Head of mouse, 350280000, 1, 9612036
+simpleSRG, Maus mit Draht, 495846240, 1, 106053
+simpleSRG, Skeleton, 26250510, 1, 4436
+simpleSRG, Skull of mouse, 350280000, 1, 386228
+simpleSRG, CubeFull, 8000000, 1, 144911
+simpleSRG, SphereFull, 8000000, 1, 64518
+simpleSRG, Helix_D2, 8000000, 1, 484
+simpleSRG, Helix_D3, 8000000, 1, 619
+simpleSRG, Helix_D4, 8000000, 1, 1132
+simpleSRG, Helix_D5, 8000000, 1, 819
+simpleSRG, Helix_D6, 8000000, 1, 789
+simpleSRG, Helix_D7, 8000000, 1, 2466
+simpleSRG, Helix_D8, 8000000, 1, 3034
+simpleSRG, Helix_D9, 8000000, 1, 1604
+simpleSRG, Helix_D10, 8000000, 1, 2335
+simpleSRG, Helix_D11, 8000000, 1, 4587
+simpleSRG, Helix_D12, 8000000, 1, 6116
+simpleSRG, Helix_D13, 8000000, 1, 5558
+simpleSRG, Helix_D14, 8000000, 1, 6706
+simpleSRG, Helix_D15, 8000000, 1, 6398
+simpleSRG, Helix_D16, 8000000, 1, 7214
+simpleSRG, Helix_D17, 8000000, 1, 7415
+simpleSRG, Helix_D18, 8000000, 1, 7983
+simpleSRG, Helix_D19, 8000000, 1, 13882
+simpleSRG, Helix_D20, 8000000, 1, 12609
+simpleSRG, Helix_D21, 8000000, 1, 13716
+simpleSRG, Helix_D22, 8000000, 1, 16188
+simpleSRG, Helix_D23, 8000000, 1, 17152
+simpleSRG, Helix_D24, 8000000, 1, 18647
+simpleSRG, Helix_D25, 8000000, 1, 21777
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6249278
+simpleSRG, Head of mouse, 350280000, 1, 7327759
+simpleSRG, Maus mit Draht, 495846240, 1, 94876
+simpleSRG, Skeleton, 26250510, 1, 5068
+simpleSRG, Skull of mouse, 350280000, 1, 287128
+simpleSRG, CubeFull, 8000000, 1, 124190
+simpleSRG, SphereFull, 8000000, 1, 63363
+simpleSRG, Helix_D2, 8000000, 1, 448
+simpleSRG, Helix_D3, 8000000, 1, 659
+simpleSRG, Helix_D4, 8000000, 1, 1140
+simpleSRG, Helix_D5, 8000000, 1, 797
+simpleSRG, Helix_D6, 8000000, 1, 771
+simpleSRG, Helix_D7, 8000000, 1, 2572
+simpleSRG, Helix_D8, 8000000, 1, 3180
+simpleSRG, Helix_D9, 8000000, 1, 1602
+simpleSRG, Helix_D10, 8000000, 1, 1823
+simpleSRG, Helix_D11, 8000000, 1, 4588
+simpleSRG, Helix_D12, 8000000, 1, 5451
+simpleSRG, Helix_D13, 8000000, 1, 6086
+simpleSRG, Helix_D14, 8000000, 1, 5781
+simpleSRG, Helix_D15, 8000000, 1, 6604
+simpleSRG, Helix_D16, 8000000, 1, 7623
+simpleSRG, Helix_D17, 8000000, 1, 9209
+simpleSRG, Helix_D18, 8000000, 1, 8469
+simpleSRG, Helix_D19, 8000000, 1, 10577
+simpleSRG, Helix_D20, 8000000, 1, 12207
+simpleSRG, Helix_D21, 8000000, 1, 16299
+simpleSRG, Helix_D22, 8000000, 1, 15825
+simpleSRG, Helix_D23, 8000000, 1, 20140
+simpleSRG, Helix_D24, 8000000, 1, 16388
+simpleSRG, Helix_D25, 8000000, 1, 20823
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6259377
+simpleSRG, Head of mouse, 350280000, 1, 7326203
+simpleSRG, Maus mit Draht, 495846240, 1, 102617
+simpleSRG, Skeleton, 26250510, 1, 4685
+simpleSRG, Skull of mouse, 350280000, 1, 287153
+simpleSRG, CubeFull, 8000000, 1, 127207
+simpleSRG, SphereFull, 8000000, 1, 61421
+simpleSRG, Helix_D2, 8000000, 1, 527
+simpleSRG, Helix_D3, 8000000, 1, 657
+simpleSRG, Helix_D4, 8000000, 1, 1155
+simpleSRG, Helix_D5, 8000000, 1, 813
+simpleSRG, Helix_D6, 8000000, 1, 789
+simpleSRG, Helix_D7, 8000000, 1, 2715
+simpleSRG, Helix_D8, 8000000, 1, 3048
+simpleSRG, Helix_D9, 8000000, 1, 1592
+simpleSRG, Helix_D10, 8000000, 1, 1857
+simpleSRG, Helix_D11, 8000000, 1, 4674
+simpleSRG, Helix_D12, 8000000, 1, 5206
+simpleSRG, Helix_D13, 8000000, 1, 5811
+simpleSRG, Helix_D14, 8000000, 1, 6281
+simpleSRG, Helix_D15, 8000000, 1, 6587
+simpleSRG, Helix_D16, 8000000, 1, 7092
+simpleSRG, Helix_D17, 8000000, 1, 8952
+simpleSRG, Helix_D18, 8000000, 1, 10043
+simpleSRG, Helix_D19, 8000000, 1, 10200
+simpleSRG, Helix_D20, 8000000, 1, 12493
+simpleSRG, Helix_D21, 8000000, 1, 15348
+simpleSRG, Helix_D22, 8000000, 1, 16115
+simpleSRG, Helix_D23, 8000000, 1, 15971
+simpleSRG, Helix_D24, 8000000, 1, 19432
+simpleSRG, Helix_D25, 8000000, 1, 20368
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7612481
+simpleSRG, Head of mouse, 350280000, 1, 8148870
+simpleSRG, Maus mit Draht, 495846240, 1, 94467
+simpleSRG, Skeleton, 26250510, 1, 4027
+simpleSRG, Skull of mouse, 350280000, 1, 294711
+simpleSRG, CubeFull, 8000000, 1, 141384
+simpleSRG, SphereFull, 8000000, 1, 61447
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7236179
+simpleSRG, Head of mouse, 350280000, 1, 7868433
+simpleSRG, Maus mit Draht, 495846240, 1, 96601
+simpleSRG, Skeleton, 26250510, 1, 5188
+simpleSRG, Skull of mouse, 350280000, 1, 267411
+simpleSRG, CubeFull, 8000000, 1, 133050
+simpleSRG, SphereFull, 8000000, 1, 65051
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6694467
+simpleSRG, Head of mouse, 350280000, 1, 7802741
+simpleSRG, Maus mit Draht, 495846240, 1, 98444
+simpleSRG, Skeleton, 26250510, 1, 4689
+simpleSRG, Skull of mouse, 350280000, 1, 292981
+simpleSRG, CubeFull, 8000000, 1, 152839
+simpleSRG, SphereFull, 8000000, 1, 70153
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7574337
+simpleSRG, Head of mouse, 350280000, 1, 8358351
+simpleSRG, Maus mit Draht, 495846240, 1, 101833
+simpleSRG, Skeleton, 26250510, 1, 5001
+simpleSRG, Skull of mouse, 350280000, 1, 317589
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7599918
+simpleSRG, Head of mouse, 350280000, 1, 8570824
+simpleSRG, Maus mit Draht, 495846240, 1, 100849
+simpleSRG, Skeleton, 26250510, 1, 4177
+simpleSRG, Skull of mouse, 350280000, 1, 355085
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7629236
+simpleSRG, Head of mouse, 350280000, 1, 8679622
+simpleSRG, Maus mit Draht, 495846240, 1, 106322
+simpleSRG, Skeleton, 26250510, 1, 5022
+simpleSRG, Skull of mouse, 350280000, 1, 336423
+simpleSRG, CubeFull, 8000000, 1, 235528
+simpleSRG, SphereFull, 8000000, 1, 112597
+simpleSRG, Helix_D1, 8000000, 1, 253
+simpleSRG, Helix_D2, 8000000, 1, 527
+simpleSRG, Helix_D3, 8000000, 1, 985
+simpleSRG, Helix_D4, 8000000, 1, 1270
+simpleSRG, Helix_D5, 8000000, 1, 943
+simpleSRG, Helix_D6, 8000000, 1, 911
+simpleSRG, Helix_D7, 8000000, 1, 2935
+simpleSRG, Helix_D8, 8000000, 1, 3499
+simpleSRG, Helix_D9, 8000000, 1, 1824
+simpleSRG, Helix_D10, 8000000, 1, 2056
+simpleSRG, Helix_D11, 8000000, 1, 5243
+simpleSRG, Helix_D12, 8000000, 1, 5997
+simpleSRG, Helix_D13, 8000000, 1, 6777
+simpleSRG, Helix_D14, 8000000, 1, 7075
+simpleSRG, Helix_D15, 8000000, 1, 7640
+simpleSRG, Helix_D16, 8000000, 1, 8258
+simpleSRG, Helix_D17, 8000000, 1, 8944
+simpleSRG, Helix_D18, 8000000, 1, 9043
+simpleSRG, Helix_D19, 8000000, 1, 11296
+simpleSRG, Helix_D20, 8000000, 1, 14602
+simpleSRG, Helix_D21, 8000000, 1, 16413
+simpleSRG, Helix_D22, 8000000, 1, 17147
+simpleSRG, Helix_D23, 8000000, 1, 19388
+simpleSRG, Helix_D24, 8000000, 1, 19096
+simpleSRG, Helix_D25, 8000000, 1, 21541
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6349364
+simpleSRG, Head of mouse, 350280000, 1, 7377474
+simpleSRG, Maus mit Draht, 495846240, 1, 96320
+simpleSRG, Skeleton, 26250510, 1, 4111
+simpleSRG, Skull of mouse, 350280000, 1, 285273
+simpleSRG, CubeFull, 8000000, 1, 129297
+simpleSRG, SphereFull, 8000000, 1, 60767
+simpleSRG, Helix_D1, 8000000, 1, 225
+simpleSRG, Helix_D2, 8000000, 1, 513
+simpleSRG, Helix_D3, 8000000, 1, 730
+simpleSRG, Helix_D4, 8000000, 1, 1213
+simpleSRG, Helix_D5, 8000000, 1, 979
+simpleSRG, Helix_D6, 8000000, 1, 832
+simpleSRG, Helix_D7, 8000000, 1, 2364
+simpleSRG, Helix_D8, 8000000, 1, 3034
+simpleSRG, Helix_D9, 8000000, 1, 1658
+simpleSRG, Helix_D10, 8000000, 1, 1869
+simpleSRG, Helix_D11, 8000000, 1, 4727
+simpleSRG, Helix_D12, 8000000, 1, 7126
+simpleSRG, Helix_D13, 8000000, 1, 8200
+simpleSRG, Helix_D14, 8000000, 1, 5663
+simpleSRG, Helix_D15, 8000000, 1, 6489
+simpleSRG, Helix_D16, 8000000, 1, 6931
+simpleSRG, Helix_D17, 8000000, 1, 7638
+simpleSRG, Helix_D18, 8000000, 1, 10128
+simpleSRG, Helix_D19, 8000000, 1, 12916
+simpleSRG, Helix_D20, 8000000, 1, 12632
+simpleSRG, Helix_D21, 8000000, 1, 14750
+simpleSRG, Helix_D22, 8000000, 1, 17892
+simpleSRG, Helix_D23, 8000000, 1, 15531
+simpleSRG, Helix_D24, 8000000, 1, 20310
+simpleSRG, Helix_D25, 8000000, 1, 17918
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10444614
+simpleSRG, Head of mouse, 350280000, 1, 11806460
+simpleSRG, Maus mit Draht, 495846240, 1, 188256
+simpleSRG, Skeleton, 26250510, 1, 9157
+simpleSRG, Skull of mouse, 350280000, 1, 532429
+simpleSRG, CubeFull, 8000000, 1, 266230
+simpleSRG, SphereFull, 8000000, 1, 119644
+simpleSRG, Helix_D1, 8000000, 1, 370
+simpleSRG, Helix_D2, 8000000, 1, 813
+simpleSRG, Helix_D3, 8000000, 1, 2271
+simpleSRG, Helix_D4, 8000000, 1, 4388
+simpleSRG, Helix_D5, 8000000, 1, 2866
+simpleSRG, Helix_D6, 8000000, 1, 3265
+simpleSRG, Helix_D7, 8000000, 1, 9862
+simpleSRG, Helix_D8, 8000000, 1, 6786
+simpleSRG, Helix_D9, 8000000, 1, 2939
+simpleSRG, Helix_D10, 8000000, 1, 6293
+simpleSRG, Helix_D11, 8000000, 1, 8665
+simpleSRG, Helix_D12, 8000000, 1, 10541
+simpleSRG, Helix_D13, 8000000, 1, 16763
+simpleSRG, Helix_D14, 8000000, 1, 16502
+simpleSRG, Helix_D15, 8000000, 1, 16588
+simpleSRG, Helix_D16, 8000000, 1, 29103
+simpleSRG, Helix_D17, 8000000, 1, 29755
+simpleSRG, Helix_D18, 8000000, 1, 17699
+simpleSRG, Helix_D19, 8000000, 1, 22462
+simpleSRG, Helix_D20, 8000000, 1, 23455
+simpleSRG, Helix_D21, 8000000, 1, 32349
+simpleSRG, Helix_D22, 8000000, 1, 37066
+simpleSRG, Helix_D23, 8000000, 1, 61468
+simpleSRG, Helix_D24, 8000000, 1, 62832
+simpleSRG, Helix_D25, 8000000, 1, 72118
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10458042
+simpleSRG, Head of mouse, 350280000, 1, 11888068
+simpleSRG, Maus mit Draht, 495846240, 1, 179954
+simpleSRG, Skeleton, 26250510, 1, 9350
+simpleSRG, Skull of mouse, 350280000, 1, 523139
+simpleSRG, CubeFull, 8000000, 1, 257514
+simpleSRG, SphereFull, 8000000, 1, 126497
+simpleSRG, Helix_D1, 8000000, 1, 385
+simpleSRG, Helix_D2, 8000000, 1, 780
+simpleSRG, Helix_D3, 8000000, 1, 1105
+simpleSRG, Helix_D4, 8000000, 1, 1998
+simpleSRG, Helix_D5, 8000000, 1, 1490
+simpleSRG, Helix_D6, 8000000, 1, 1684
+simpleSRG, Helix_D7, 8000000, 1, 5657
+simpleSRG, Helix_D8, 8000000, 1, 5733
+simpleSRG, Helix_D9, 8000000, 1, 2922
+simpleSRG, Helix_D10, 8000000, 1, 3351
+simpleSRG, Helix_D11, 8000000, 1, 9435
+simpleSRG, Helix_D12, 8000000, 1, 11900
+simpleSRG, Helix_D13, 8000000, 1, 12077
+simpleSRG, Helix_D14, 8000000, 1, 12576
+simpleSRG, Helix_D15, 8000000, 1, 13491
+simpleSRG, Helix_D16, 8000000, 1, 17102
+simpleSRG, Helix_D17, 8000000, 1, 17884
+simpleSRG, Helix_D18, 8000000, 1, 15605
+simpleSRG, Helix_D19, 8000000, 1, 37026
+simpleSRG, Helix_D20, 8000000, 1, 41820
+simpleSRG, Helix_D21, 8000000, 1, 27515
+simpleSRG, Helix_D22, 8000000, 1, 31013
+simpleSRG, Helix_D23, 8000000, 1, 34147
+simpleSRG, Helix_D24, 8000000, 1, 35397
+simpleSRG, Helix_D25, 8000000, 1, 39401
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10817759
+simpleSRG, Head of mouse, 350280000, 1, 12013194
+simpleSRG, Maus mit Draht, 495846240, 1, 179039
+simpleSRG, Skeleton, 26250510, 1, 9420
+simpleSRG, Skull of mouse, 350280000, 1, 522688
+simpleSRG, CubeFull, 8000000, 1, 276073
+simpleSRG, SphereFull, 8000000, 1, 121161
+simpleSRG, Helix_D1, 8000000, 1, 367
+simpleSRG, Helix_D2, 8000000, 1, 841
+simpleSRG, Helix_D3, 8000000, 1, 1575
+simpleSRG, Helix_D4, 8000000, 1, 3596
+simpleSRG, Helix_D5, 8000000, 1, 1841
+simpleSRG, Helix_D6, 8000000, 1, 1466
+simpleSRG, Helix_D7, 8000000, 1, 4588
+simpleSRG, Helix_D8, 8000000, 1, 6721
+simpleSRG, Helix_D9, 8000000, 1, 4086
+simpleSRG, Helix_D10, 8000000, 1, 3946
+simpleSRG, Helix_D11, 8000000, 1, 10301
+simpleSRG, Helix_D12, 8000000, 1, 13168
+simpleSRG, Helix_D13, 8000000, 1, 18703
+simpleSRG, Helix_D14, 8000000, 1, 19007
+simpleSRG, Helix_D15, 8000000, 1, 20729
+simpleSRG, Helix_D16, 8000000, 1, 23320
+simpleSRG, Helix_D17, 8000000, 1, 27666
+simpleSRG, Helix_D18, 8000000, 1, 16005
+simpleSRG, Helix_D19, 8000000, 1, 20359
+simpleSRG, Helix_D20, 8000000, 1, 28620
+simpleSRG, Helix_D21, 8000000, 1, 27877
+simpleSRG, Helix_D22, 8000000, 1, 44965
+simpleSRG, Helix_D23, 8000000, 1, 48839
+simpleSRG, Helix_D24, 8000000, 1, 35146
+simpleSRG, Helix_D25, 8000000, 1, 38657
+simpleSRG, BoneMaskHigh, 2127360000, 1, 12321399
+simpleSRG, Head of mouse, 350280000, 1, 13322483
+simpleSRG, Maus mit Draht, 495846240, 1, 197377
+simpleSRG, Skeleton, 26250510, 1, 7722
+simpleSRG, Skull of mouse, 350280000, 1, 649796
+simpleSRG, CubeFull, 8000000, 1, 324611
+simpleSRG, SphereFull, 8000000, 1, 176077
+simpleSRG, Helix_D1, 8000000, 1, 384
+simpleSRG, Helix_D2, 8000000, 1, 848
+simpleSRG, Helix_D3, 8000000, 1, 1149
+simpleSRG, Helix_D4, 8000000, 1, 2274
+simpleSRG, Helix_D5, 8000000, 1, 1711
+simpleSRG, Helix_D6, 8000000, 1, 2207
+simpleSRG, Helix_D7, 8000000, 1, 12634
+simpleSRG, Helix_D8, 8000000, 1, 13621
+simpleSRG, Helix_D9, 8000000, 1, 6360
+simpleSRG, Helix_D10, 8000000, 1, 3531
+simpleSRG, Helix_D11, 8000000, 1, 13576
+simpleSRG, Helix_D12, 8000000, 1, 22946
+simpleSRG, Helix_D13, 8000000, 1, 40364
+simpleSRG, Helix_D14, 8000000, 1, 12990
+simpleSRG, Helix_D15, 8000000, 1, 13712
+simpleSRG, Helix_D16, 8000000, 1, 14244
+simpleSRG, Helix_D17, 8000000, 1, 15886
+simpleSRG, Helix_D18, 8000000, 1, 17598
+simpleSRG, Helix_D19, 8000000, 1, 42885
+simpleSRG, Helix_D20, 8000000, 1, 65442
+simpleSRG, Helix_D21, 8000000, 1, 49885
+simpleSRG, Helix_D22, 8000000, 1, 34478
+simpleSRG, Helix_D23, 8000000, 1, 35631
+simpleSRG, Helix_D24, 8000000, 1, 63191
+simpleSRG, Helix_D25, 8000000, 1, 41155
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10983796
+simpleSRG, Head of mouse, 350280000, 1, 12276741
+simpleSRG, Maus mit Draht, 495846240, 1, 183836
+simpleSRG, Skeleton, 26250510, 1, 8366
+simpleSRG, Skull of mouse, 350280000, 1, 548326
+simpleSRG, CubeFull, 8000000, 1, 288794
+simpleSRG, SphereFull, 8000000, 1, 133765
+simpleSRG, Helix_D1, 8000000, 1, 364
+simpleSRG, Helix_D2, 8000000, 1, 792
+simpleSRG, Helix_D3, 8000000, 1, 1157
+simpleSRG, Helix_D4, 8000000, 1, 2104
+simpleSRG, Helix_D5, 8000000, 1, 1600
+simpleSRG, Helix_D6, 8000000, 1, 1478
+simpleSRG, Helix_D7, 8000000, 1, 4871
+simpleSRG, Helix_D8, 8000000, 1, 5890
+simpleSRG, Helix_D9, 8000000, 1, 3192
+simpleSRG, Helix_D10, 8000000, 1, 3566
+simpleSRG, Helix_D11, 8000000, 1, 8908
+simpleSRG, Helix_D12, 8000000, 1, 10352
+simpleSRG, Helix_D13, 8000000, 1, 11374
+simpleSRG, Helix_D14, 8000000, 1, 11308
+simpleSRG, Helix_D15, 8000000, 1, 12604
+simpleSRG, Helix_D16, 8000000, 1, 16150
+simpleSRG, Helix_D17, 8000000, 1, 15618
+simpleSRG, Helix_D18, 8000000, 1, 16861
+simpleSRG, Helix_D19, 8000000, 1, 21222
+simpleSRG, Helix_D20, 8000000, 1, 26650
+simpleSRG, Helix_D21, 8000000, 1, 28984
+simpleSRG, Helix_D22, 8000000, 1, 32846
+simpleSRG, Helix_D23, 8000000, 1, 33842
+simpleSRG, Helix_D24, 8000000, 1, 38946
+simpleSRG, Helix_D25, 8000000, 1, 40060
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10947814
+simpleSRG, Head of mouse, 350280000, 1, 12655785
+simpleSRG, Maus mit Draht, 495846240, 1, 177303
+simpleSRG, Skeleton, 26250510, 1, 8250
+simpleSRG, Skull of mouse, 350280000, 1, 522664
+simpleSRG, CubeFull, 8000000, 1, 278350
+simpleSRG, SphereFull, 8000000, 1, 119136
+simpleSRG, Helix_D1, 8000000, 1, 370
+simpleSRG, Helix_D2, 8000000, 1, 778
+simpleSRG, Helix_D3, 8000000, 1, 1128
+simpleSRG, Helix_D4, 8000000, 1, 2100
+simpleSRG, Helix_D5, 8000000, 1, 1524
+simpleSRG, Helix_D6, 8000000, 1, 1685
+simpleSRG, Helix_D7, 8000000, 1, 5693
+simpleSRG, Helix_D8, 8000000, 1, 6879
+simpleSRG, Helix_D9, 8000000, 1, 3527
+simpleSRG, Helix_D10, 8000000, 1, 3369
+simpleSRG, Helix_D11, 8000000, 1, 8953
+simpleSRG, Helix_D12, 8000000, 1, 10059
+simpleSRG, Helix_D13, 8000000, 1, 11001
+simpleSRG, Helix_D14, 8000000, 1, 11313
+simpleSRG, Helix_D15, 8000000, 1, 13457
+simpleSRG, Helix_D16, 8000000, 1, 13752
+simpleSRG, Helix_D17, 8000000, 1, 14734
+simpleSRG, Helix_D18, 8000000, 1, 16306
+simpleSRG, Helix_D19, 8000000, 1, 23618
+simpleSRG, Helix_D20, 8000000, 1, 29316
+simpleSRG, Helix_D21, 8000000, 1, 32299
+simpleSRG, Helix_D22, 8000000, 1, 32017
+simpleSRG, Helix_D23, 8000000, 1, 38024
+simpleSRG, Helix_D24, 8000000, 1, 34128
+simpleSRG, Helix_D25, 8000000, 1, 35968
+simpleSRG, BoneMaskHigh, 2127360000, 1, 10506908
+simpleSRG, Head of mouse, 350280000, 1, 11596845
+simpleSRG, Maus mit Draht, 495846240, 1, 184233
+simpleSRG, Skeleton, 26250510, 1, 7254
+simpleSRG, Skull of mouse, 350280000, 1, 522859
+simpleSRG, CubeFull, 8000000, 1, 162095
+simpleSRG, SphereFull, 8000000, 1, 67401
+simpleSRG, Helix_D1, 8000000, 1, 401
+simpleSRG, Helix_D2, 8000000, 1, 467
+simpleSRG, Helix_D3, 8000000, 1, 844
+simpleSRG, Helix_D4, 8000000, 1, 1147
+simpleSRG, Helix_D5, 8000000, 1, 812
+simpleSRG, Helix_D6, 8000000, 1, 887
+simpleSRG, Helix_D7, 8000000, 1, 2795
+simpleSRG, Helix_D8, 8000000, 1, 3014
+simpleSRG, Helix_D9, 8000000, 1, 1663
+simpleSRG, Helix_D10, 8000000, 1, 1994
+simpleSRG, Helix_D11, 8000000, 1, 4817
+simpleSRG, Helix_D12, 8000000, 1, 7131
+simpleSRG, Helix_D13, 8000000, 1, 5756
+simpleSRG, Helix_D14, 8000000, 1, 5928
+simpleSRG, Helix_D15, 8000000, 1, 7411
+simpleSRG, Helix_D16, 8000000, 1, 7554
+simpleSRG, Helix_D17, 8000000, 1, 8130
+simpleSRG, Helix_D18, 8000000, 1, 9203
+simpleSRG, Helix_D19, 8000000, 1, 10734
+simpleSRG, Helix_D20, 8000000, 1, 14024
+simpleSRG, Helix_D21, 8000000, 1, 14690
+simpleSRG, Helix_D22, 8000000, 1, 15614
+simpleSRG, Helix_D23, 8000000, 1, 19347
+simpleSRG, Helix_D24, 8000000, 1, 19848
+simpleSRG, Helix_D25, 8000000, 1, 19409
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7689054
+simpleSRG, Head of mouse, 350280000, 1, 8319378
+simpleSRG, Maus mit Draht, 495846240, 1, 102327
+simpleSRG, Skeleton, 26250510, 1, 4092
+simpleSRG, Skull of mouse, 350280000, 1, 323793
+simpleSRG, CubeFull, 8000000, 1, 162040
+simpleSRG, SphereFull, 8000000, 1, 72957
+simpleSRG, Helix_D2, 8000000, 1, 4
+simpleSRG, Helix_D3, 8000000, 1, 2
+simpleSRG, Helix_D4, 8000000, 1, 1
+simpleSRG, Helix_D5, 8000000, 1, 3
+simpleSRG, Helix_D6, 8000000, 1, 899
+simpleSRG, Helix_D7, 8000000, 1, 2890
+simpleSRG, Helix_D8, 8000000, 1, 3550
+simpleSRG, Helix_D9, 8000000, 1, 1727
+simpleSRG, Helix_D10, 8000000, 1, 2311
+simpleSRG, Helix_D11, 8000000, 1, 5669
+simpleSRG, Helix_D12, 8000000, 1, 6629
+simpleSRG, Helix_D13, 8000000, 1, 5792
+simpleSRG, Helix_D14, 8000000, 1, 5885
+simpleSRG, Helix_D15, 8000000, 1, 6976
+simpleSRG, Helix_D16, 8000000, 1, 8203
+simpleSRG, Helix_D17, 8000000, 1, 8211
+simpleSRG, Helix_D18, 8000000, 1, 8602
+simpleSRG, Helix_D19, 8000000, 1, 11078
+simpleSRG, Helix_D20, 8000000, 1, 14278
+simpleSRG, Helix_D21, 8000000, 1, 14353
+simpleSRG, Helix_D22, 8000000, 1, 16357
+simpleSRG, Helix_D23, 8000000, 1, 18295
+simpleSRG, Helix_D24, 8000000, 1, 21144
+simpleSRG, Helix_D25, 8000000, 1, 21017
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7170864
+simpleSRG, Head of mouse, 350280000, 1, 8174934
+simpleSRG, Maus mit Draht, 495846240, 1, 105648
+simpleSRG, Skeleton, 26250510, 1, 4224
+simpleSRG, Skull of mouse, 350280000, 1, 406726
+simpleSRG, CubeFull, 8000000, 1, 162243
+simpleSRG, SphereFull, 8000000, 1, 86345
+simpleSRG, Helix_D3, 8000000, 1, 2
+simpleSRG, Helix_D4, 8000000, 1, 3
+simpleSRG, Helix_D5, 8000000, 1, 4
+simpleSRG, Helix_D6, 8000000, 1, 4
+simpleSRG, Helix_D7, 8000000, 1, 6
+simpleSRG, Helix_D8, 8000000, 1, 11
+simpleSRG, Helix_D9, 8000000, 1, 7
+simpleSRG, Helix_D10, 8000000, 1, 18
+simpleSRG, Helix_D11, 8000000, 1, 11
+simpleSRG, Helix_D12, 8000000, 1, 13
+simpleSRG, Helix_D13, 8000000, 1, 12
+simpleSRG, Helix_D14, 8000000, 1, 16
+simpleSRG, Helix_D15, 8000000, 1, 17
+simpleSRG, Helix_D16, 8000000, 1, 20
+simpleSRG, Helix_D17, 8000000, 1, 21
+simpleSRG, Helix_D18, 8000000, 1, 23
+simpleSRG, Helix_D19, 8000000, 1, 26
+simpleSRG, Helix_D20, 8000000, 1, 28
+simpleSRG, Helix_D21, 8000000, 1, 29
+simpleSRG, Helix_D22, 8000000, 1, 32
+simpleSRG, Helix_D23, 8000000, 1, 33
+simpleSRG, Helix_D24, 8000000, 1, 37
+simpleSRG, Helix_D25, 8000000, 1, 38
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7042999
+simpleSRG, Head of mouse, 350280000, 1, 8116558
+simpleSRG, Maus mit Draht, 495846240, 1, 111946
+simpleSRG, Skeleton, 26250510, 1, 4148
+simpleSRG, Skull of mouse, 350280000, 1, 288413
+simpleSRG, CubeFull, 8000000, 1, 147613
+simpleSRG, SphereFull, 8000000, 1, 68614
+simpleSRG, Helix_D1, 8000000, 1, 159
+simpleSRG, Helix_D2, 8000000, 1, 436
+simpleSRG, Helix_D3, 8000000, 1, 748
+simpleSRG, Helix_D4, 8000000, 1, 1095
+simpleSRG, Helix_D5, 8000000, 1, 1615
+simpleSRG, Helix_D6, 8000000, 1, 2142
+simpleSRG, Helix_D7, 8000000, 1, 2623
+simpleSRG, Helix_D8, 8000000, 1, 3116
+simpleSRG, Helix_D9, 8000000, 1, 4078
+simpleSRG, Helix_D10, 8000000, 1, 4700
+simpleSRG, Helix_D11, 8000000, 1, 6264
+simpleSRG, Helix_D12, 8000000, 1, 7619
+simpleSRG, Helix_D13, 8000000, 1, 8196
+simpleSRG, Helix_D14, 8000000, 1, 9226
+simpleSRG, Helix_D15, 8000000, 1, 9383
+simpleSRG, Helix_D16, 8000000, 1, 9634
+simpleSRG, Helix_D17, 8000000, 1, 11279
+simpleSRG, Helix_D18, 8000000, 1, 10706
+simpleSRG, Helix_D19, 8000000, 1, 12736
+simpleSRG, Helix_D20, 8000000, 1, 13390
+simpleSRG, Helix_D21, 8000000, 1, 13439
+simpleSRG, Helix_D22, 8000000, 1, 15906
+simpleSRG, Helix_D23, 8000000, 1, 16254
+simpleSRG, Helix_D24, 8000000, 1, 18833
+simpleSRG, Helix_D25, 8000000, 1, 18380
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7056650
+simpleSRG, Head of mouse, 350280000, 1, 8113590
+simpleSRG, Maus mit Draht, 495846240, 1, 102843
+simpleSRG, Skeleton, 26250510, 1, 4181
+simpleSRG, Skull of mouse, 350280000, 1, 309307
+simpleSRG, CubeFull, 8000000, 1, 166396
+simpleSRG, SphereFull, 8000000, 1, 85124
+simpleSRG, Helix_D1, 8000000, 1, 789
+simpleSRG, Helix_D2, 8000000, 1, 1891
+simpleSRG, Helix_D3, 8000000, 1, 2203
+simpleSRG, Helix_D4, 8000000, 1, 3270
+simpleSRG, Helix_D5, 8000000, 1, 4089
+simpleSRG, Helix_D6, 8000000, 1, 4530
+simpleSRG, Helix_D7, 8000000, 1, 5904
+simpleSRG, Helix_D8, 8000000, 1, 5416
+simpleSRG, Helix_D9, 8000000, 1, 6686
+simpleSRG, Helix_D10, 8000000, 1, 6253
+simpleSRG, Helix_D11, 8000000, 1, 8351
+simpleSRG, Helix_D12, 8000000, 1, 9235
+simpleSRG, Helix_D13, 8000000, 1, 9646
+simpleSRG, Helix_D14, 8000000, 1, 10010
+simpleSRG, Helix_D15, 8000000, 1, 12178
+simpleSRG, Helix_D16, 8000000, 1, 14632
+simpleSRG, Helix_D17, 8000000, 1, 13885
+simpleSRG, Helix_D18, 8000000, 1, 12923
+simpleSRG, Helix_D19, 8000000, 1, 14841
+simpleSRG, Helix_D20, 8000000, 1, 16060
+simpleSRG, Helix_D21, 8000000, 1, 17081
+simpleSRG, Helix_D22, 8000000, 1, 17109
+simpleSRG, Helix_D23, 8000000, 1, 20854
+simpleSRG, Helix_D24, 8000000, 1, 21648
+simpleSRG, Helix_D25, 8000000, 1, 21290
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7502583
+simpleSRG, Head of mouse, 350280000, 1, 8271903
+simpleSRG, Maus mit Draht, 495846240, 1, 110225
+simpleSRG, Skeleton, 26250510, 1, 4221
+simpleSRG, Skull of mouse, 350280000, 1, 295234
+simpleSRG, CubeFull, 8000000, 1, 170396
+simpleSRG, SphereFull, 8000000, 1, 75064
+simpleSRG, Helix_D1, 8000000, 1, 57
+simpleSRG, Helix_D2, 8000000, 1, 174
+simpleSRG, Helix_D3, 8000000, 1, 195
+simpleSRG, Helix_D4, 8000000, 1, 321
+simpleSRG, Helix_D5, 8000000, 1, 401
+simpleSRG, Helix_D6, 8000000, 1, 544
+simpleSRG, Helix_D7, 8000000, 1, 707
+simpleSRG, Helix_D8, 8000000, 1, 1093
+simpleSRG, Helix_D9, 8000000, 1, 1083
+simpleSRG, Helix_D10, 8000000, 1, 1411
+simpleSRG, Helix_D11, 8000000, 1, 1568
+simpleSRG, Helix_D12, 8000000, 1, 1789
+simpleSRG, Helix_D13, 8000000, 1, 2310
+simpleSRG, Helix_D14, 8000000, 1, 2585
+simpleSRG, Helix_D15, 8000000, 1, 2862
+simpleSRG, Helix_D16, 8000000, 1, 3121
+simpleSRG, Helix_D17, 8000000, 1, 4148
+simpleSRG, Helix_D18, 8000000, 1, 4863
+simpleSRG, Helix_D19, 8000000, 1, 6049
+simpleSRG, Helix_D20, 8000000, 1, 5188
+simpleSRG, Helix_D21, 8000000, 1, 6157
+simpleSRG, Helix_D22, 8000000, 1, 5919
+simpleSRG, Helix_D23, 8000000, 1, 6922
+simpleSRG, Helix_D24, 8000000, 1, 8368
+simpleSRG, Helix_D25, 8000000, 1, 7992
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7090315
+simpleSRG, Head of mouse, 350280000, 1, 8382619
+simpleSRG, Maus mit Draht, 495846240, 1, 105047
+simpleSRG, Skeleton, 26250510, 1, 3922
+simpleSRG, Skull of mouse, 350280000, 1, 316031
+simpleSRG, CubeFull, 8000000, 1, 156373
+simpleSRG, SphereFull, 8000000, 1, 68813
+simpleSRG, Helix_D1, 8000000, 1, 88
+simpleSRG, Helix_D2, 8000000, 1, 214
+simpleSRG, Helix_D3, 8000000, 1, 364
+simpleSRG, Helix_D4, 8000000, 1, 746
+simpleSRG, Helix_D5, 8000000, 1, 838
+simpleSRG, Helix_D6, 8000000, 1, 1051
+simpleSRG, Helix_D7, 8000000, 1, 1653
+simpleSRG, Helix_D8, 8000000, 1, 2042
+simpleSRG, Helix_D9, 8000000, 1, 2513
+simpleSRG, Helix_D10, 8000000, 1, 2997
+simpleSRG, Helix_D11, 8000000, 1, 3152
+simpleSRG, Helix_D12, 8000000, 1, 5331
+simpleSRG, Helix_D13, 8000000, 1, 5255
+simpleSRG, Helix_D14, 8000000, 1, 5067
+simpleSRG, Helix_D15, 8000000, 1, 6149
+simpleSRG, BoneMaskHigh, 2127360000, 1, 8725947
+simpleSRG, Head of mouse, 350280000, 1, 8629398
+simpleSRG, Maus mit Draht, 495846240, 1, 110853
+simpleSRG, Skeleton, 26250510, 1, 5477
+simpleSRG, Skull of mouse, 350280000, 1, 434155
+simpleSRG, CubeFull, 8000000, 1, 170495
+simpleSRG, SphereFull, 8000000, 1, 65152
+simpleSRG, Helix_D1, 8000000, 1, 276
+simpleSRG, Helix_D2, 8000000, 1, 605
+simpleSRG, Helix_D3, 8000000, 1, 1325
+simpleSRG, Helix_D4, 8000000, 1, 2127
+simpleSRG, Helix_D5, 8000000, 1, 3002
+simpleSRG, Helix_D6, 8000000, 1, 4297
+simpleSRG, Helix_D7, 8000000, 1, 5198
+simpleSRG, Helix_D8, 8000000, 1, 6614
+simpleSRG, Helix_D9, 8000000, 1, 8302
+simpleSRG, Helix_D10, 8000000, 1, 12144
+simpleSRG, Helix_D11, 8000000, 1, 12375
+simpleSRG, Helix_D12, 8000000, 1, 15131
+simpleSRG, Helix_D13, 8000000, 1, 15047
+simpleSRG, Helix_D14, 8000000, 1, 19566
+simpleSRG, Helix_D15, 8000000, 1, 18725
+simpleSRG, BoneMaskHigh, 2127360000, 1, 7300879
+simpleSRG, Head of mouse, 350280000, 1, 8334304
+simpleSRG, Maus mit Draht, 495846240, 1, 100859
+simpleSRG, Skeleton, 26250510, 1, 4189
+simpleSRG, Skull of mouse, 350280000, 1, 322810
+simpleSRG, BoneMaskHigh, 2127360000, 1, 8261995
+simpleSRG, Head of mouse, 350280000, 1, 8849740
+simpleSRG, Maus mit Draht, 495846240, 1, 107440
+simpleSRG, Skeleton, 26250510, 1, 5626
+simpleSRG, Skull of mouse, 350280000, 1, 332325
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6154237
+simpleSRG, Head of mouse, 350280000, 1, 7244099
+simpleSRG, Maus mit Draht, 495846240, 1, 102831
+simpleSRG, Skeleton, 26250510, 1, 4572
+simpleSRG, Skull of mouse, 350280000, 1, 281498
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6174998
+simpleSRG, Head of mouse, 350280000, 1, 7265353
+simpleSRG, Maus mit Draht, 495846240, 1, 95617
+simpleSRG, Skeleton, 26250510, 1, 5224
+simpleSRG, Skull of mouse, 350280000, 1, 279918
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6156361
+simpleSRG, Head of mouse, 350280000, 1, 7217076
+simpleSRG, Maus mit Draht, 495846240, 1, 98240
+simpleSRG, Skeleton, 26250510, 1, 4742
+simpleSRG, Skull of mouse, 350280000, 1, 260146
+simpleSRG, CubeFull, 512000000, 1, 24103485
+simpleSRG, SphereFull, 512000000, 1, 12396493
+simpleSRG, Helix_D1, 512000000, 1, 934
+simpleSRG, Helix_D2, 512000000, 1, 2499
+simpleSRG, Helix_D3, 512000000, 1, 5105
+simpleSRG, Helix_D4, 512000000, 1, 7696
+simpleSRG, Helix_D5, 512000000, 1, 12023
+simpleSRG, Helix_D6, 512000000, 1, 17749
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6140588
+simpleSRG, Head of mouse, 350280000, 1, 7245224
+simpleSRG, Maus mit Draht, 495846240, 1, 107495
+simpleSRG, Skeleton, 26250510, 1, 5237
+simpleSRG, Skull of mouse, 350280000, 1, 301022
+simpleSRG, CubeFull, 8000000, 1, 125541
+simpleSRG, SphereFull, 8000000, 1, 62381
+simpleSRG, Helix_D1, 8000000, 1, 204
+simpleSRG, Helix_D2, 8000000, 1, 940
+simpleSRG, Helix_D3, 8000000, 1, 1154
+simpleSRG, Helix_D4, 8000000, 1, 2043
+simpleSRG, Helix_D5, 8000000, 1, 3028
+simpleSRG, Helix_D6, 8000000, 1, 3757
+simpleSRG, CubeFull, 15625000, 1, 357392
+simpleSRG, SphereFull, 15625000, 1, 138711
+simpleSRG, Helix_D1, 15625000, 1, 349
+simpleSRG, Helix_D2, 15625000, 1, 688
+simpleSRG, Helix_D3, 15625000, 1, 1303
+simpleSRG, Helix_D4, 15625000, 1, 2390
+simpleSRG, Helix_D5, 15625000, 1, 3251
+simpleSRG, Helix_D6, 15625000, 1, 4664
+simpleSRG, CubeFull, 27000000, 1, 869282
+simpleSRG, SphereFull, 27000000, 1, 340488
+simpleSRG, Helix_D1, 27000000, 1, 330
+simpleSRG, Helix_D2, 27000000, 1, 895
+simpleSRG, Helix_D3, 27000000, 1, 1817
+simpleSRG, Helix_D4, 27000000, 1, 3314
+simpleSRG, Helix_D5, 27000000, 1, 4192
+simpleSRG, Helix_D6, 27000000, 1, 7397
+simpleSRG, CubeFull, 42875000, 1, 1560448
+simpleSRG, SphereFull, 42875000, 1, 721930
+simpleSRG, Helix_D1, 42875000, 1, 366
+simpleSRG, Helix_D2, 42875000, 1, 1049
+simpleSRG, Helix_D3, 42875000, 1, 2006
+simpleSRG, Helix_D4, 42875000, 1, 3322
+simpleSRG, Helix_D5, 42875000, 1, 4856
+simpleSRG, Helix_D6, 42875000, 1, 6821
+simpleSRG, CubeFull, 64000000, 1, 2696521
+simpleSRG, SphereFull, 64000000, 1, 1290736
+simpleSRG, Helix_D1, 64000000, 1, 417
+simpleSRG, Helix_D2, 64000000, 1, 1177
+simpleSRG, Helix_D3, 64000000, 1, 2293
+simpleSRG, Helix_D4, 64000000, 1, 3858
+simpleSRG, Helix_D5, 64000000, 1, 5350
+simpleSRG, Helix_D6, 64000000, 1, 7491
+simpleSRG, CubeFull, 91125000, 1, 3530699
+simpleSRG, SphereFull, 91125000, 1, 1808166
+simpleSRG, Helix_D1, 91125000, 1, 471
+simpleSRG, Helix_D2, 91125000, 1, 1384
+simpleSRG, Helix_D3, 91125000, 1, 2594
+simpleSRG, Helix_D4, 91125000, 1, 4173
+simpleSRG, Helix_D5, 91125000, 1, 7572
+simpleSRG, Helix_D6, 91125000, 1, 8936
+simpleSRG, CubeFull, 125000000, 1, 5448066
+simpleSRG, SphereFull, 125000000, 1, 2674866
+simpleSRG, Helix_D1, 125000000, 1, 517
+simpleSRG, Helix_D2, 125000000, 1, 1595
+simpleSRG, Helix_D3, 125000000, 1, 2961
+simpleSRG, Helix_D4, 125000000, 1, 4843
+simpleSRG, Helix_D5, 125000000, 1, 7166
+simpleSRG, Helix_D6, 125000000, 1, 10084
+simpleSRG, CubeFull, 166375000, 1, 7590942
+simpleSRG, SphereFull, 166375000, 1, 3698336
+simpleSRG, Helix_D1, 166375000, 1, 565
+simpleSRG, Helix_D2, 166375000, 1, 1706
+simpleSRG, Helix_D3, 166375000, 1, 3276
+simpleSRG, Helix_D4, 166375000, 1, 5332
+simpleSRG, Helix_D5, 166375000, 1, 7827
+simpleSRG, Helix_D6, 166375000, 1, 11247
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6309725
+simpleSRG, Head of mouse, 350280000, 1, 7154635
+simpleSRG, Maus mit Draht, 495846240, 1, 108865
+simpleSRG, Skeleton, 26250510, 1, 3875
+simpleSRG, Skull of mouse, 350280000, 1, 275874
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6332075
+simpleSRG, Head of mouse, 350280000, 1, 7389100
+simpleSRG, Maus mit Draht, 495846240, 1, 90924
+simpleSRG, Skeleton, 26250510, 1, 3968
+simpleSRG, Skull of mouse, 350280000, 1, 256173
+simpleSRG, CubeFull, 8000000, 1, 159205
+simpleSRG, SphereFull, 8000000, 1, 70800
+simpleSRG, Helix_D1, 8000000, 1, 225
+simpleSRG, Helix_D2, 8000000, 1, 562
+simpleSRG, Helix_D3, 8000000, 1, 1184
+simpleSRG, Helix_D4, 8000000, 1, 1808
+simpleSRG, Helix_D5, 8000000, 1, 3426
+simpleSRG, Helix_D6, 8000000, 1, 4430
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6347813
+simpleSRG, Head of mouse, 350280000, 1, 7548275
+simpleSRG, Maus mit Draht, 495846240, 1, 115911
+simpleSRG, Skeleton, 26250510, 1, 3834
+simpleSRG, Skull of mouse, 350280000, 1, 268045
+simpleSRG, CubeFull, 8000000, 1, 128187
+simpleSRG, SphereFull, 8000000, 1, 63875
+simpleSRG, Helix_D1, 8000000, 1, 196
+simpleSRG, Helix_D2, 8000000, 1, 609
+simpleSRG, Helix_D3, 8000000, 1, 1181
+simpleSRG, Helix_D4, 8000000, 1, 1758
+simpleSRG, Helix_D5, 8000000, 1, 2546
+simpleSRG, CubeFull, 512000000, 1, 23515456
+simpleSRG, SphereFull, 512000000, 1, 12260050
+simpleSRG, Helix_D1, 512000000, 1, 853
+simpleSRG, Helix_D2, 512000000, 1, 2508
+simpleSRG, Helix_D3, 512000000, 1, 4873
+simpleSRG, Helix_D4, 512000000, 1, 8151
+simpleSRG, Helix_D5, 512000000, 1, 11357
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6321167
+simpleSRG, Head of mouse, 350280000, 1, 7094433
+simpleSRG, Maus mit Draht, 495846240, 1, 105304
+simpleSRG, Skeleton, 26250510, 1, 3838
+simpleSRG, Skull of mouse, 350280000, 1, 280916
+simpleSRG, CubeFull, 8000000, 1, 131076
+simpleSRG, SphereFull, 8000000, 1, 66129
+simpleSRG, Helix_D1, 8000000, 1, 198
+simpleSRG, Helix_D2, 8000000, 1, 592
+simpleSRG, Helix_D3, 8000000, 1, 1320
+simpleSRG, Helix_D4, 8000000, 1, 1702
+simpleSRG, Helix_D5, 8000000, 1, 2614
+simpleSRG, CubeFull, 15625000, 1, 365698
+simpleSRG, SphereFull, 15625000, 1, 143559
+simpleSRG, Helix_D1, 15625000, 1, 260
+simpleSRG, Helix_D2, 15625000, 1, 801
+simpleSRG, Helix_D3, 15625000, 1, 1512
+simpleSRG, Helix_D4, 15625000, 1, 2158
+simpleSRG, Helix_D5, 15625000, 1, 3301
+simpleSRG, CubeFull, 27000000, 1, 857450
+simpleSRG, SphereFull, 27000000, 1, 343735
+simpleSRG, Helix_D1, 27000000, 1, 373
+simpleSRG, Helix_D2, 27000000, 1, 993
+simpleSRG, Helix_D3, 27000000, 1, 1963
+simpleSRG, Helix_D4, 27000000, 1, 2855
+simpleSRG, Helix_D5, 27000000, 1, 4285
+simpleSRG, CubeFull, 42875000, 1, 1566429
+simpleSRG, SphereFull, 42875000, 1, 708007
+simpleSRG, Helix_D1, 42875000, 1, 359
+simpleSRG, Helix_D2, 42875000, 1, 1296
+simpleSRG, Helix_D3, 42875000, 1, 2101
+simpleSRG, Helix_D4, 42875000, 1, 3359
+simpleSRG, Helix_D5, 42875000, 1, 4938
+simpleSRG, CubeFull, 64000000, 1, 2679943
+simpleSRG, SphereFull, 64000000, 1, 1277148
+simpleSRG, Helix_D1, 64000000, 1, 418
+simpleSRG, Helix_D2, 64000000, 1, 1179
+simpleSRG, Helix_D3, 64000000, 1, 2305
+simpleSRG, Helix_D4, 64000000, 1, 3934
+simpleSRG, Helix_D5, 64000000, 1, 5522
+simpleSRG, CubeFull, 91125000, 1, 3499218
+simpleSRG, SphereFull, 91125000, 1, 1806501
+simpleSRG, Helix_D1, 91125000, 1, 469
+simpleSRG, Helix_D2, 91125000, 1, 1420
+simpleSRG, Helix_D3, 91125000, 1, 2688
+simpleSRG, Helix_D4, 91125000, 1, 4472
+simpleSRG, Helix_D5, 91125000, 1, 6703
+simpleSRG, CubeFull, 125000000, 1, 5380921
+simpleSRG, SphereFull, 125000000, 1, 2641610
+simpleSRG, Helix_D1, 125000000, 1, 521
+simpleSRG, Helix_D2, 125000000, 1, 1594
+simpleSRG, Helix_D3, 125000000, 1, 2983
+simpleSRG, Helix_D4, 125000000, 1, 4928
+simpleSRG, Helix_D5, 125000000, 1, 7344
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6291603
+simpleSRG, Head of mouse, 350280000, 1, 7111137
+simpleSRG, Maus mit Draht, 495846240, 1, 94940
+simpleSRG, Skeleton, 26250510, 1, 3799
+simpleSRG, Skull of mouse, 350280000, 1, 264953
+simpleSRG, CubeFull, 8000000, 1, 121929
+simpleSRG, SphereFull, 8000000, 1, 58875
+simpleSRG, Helix_D1, 8000000, 1, 194
+simpleSRG, Helix_D2, 8000000, 1, 557
+simpleSRG, Helix_D3, 8000000, 1, 1097
+simpleSRG, Helix_D4, 8000000, 1, 1701
+simpleSRG, Helix_D5, 8000000, 1, 2607
+simpleSRG, CubeFull, 15625000, 1, 359895
+simpleSRG, SphereFull, 15625000, 1, 140637
+simpleSRG, Helix_D1, 15625000, 1, 253
+simpleSRG, Helix_D2, 15625000, 1, 675
+simpleSRG, Helix_D3, 15625000, 1, 1263
+simpleSRG, Helix_D4, 15625000, 1, 2112
+simpleSRG, Helix_D5, 15625000, 1, 3393
+simpleSRG, CubeFull, 27000000, 1, 838869
+simpleSRG, SphereFull, 27000000, 1, 344839
+simpleSRG, Helix_D1, 27000000, 1, 306
+simpleSRG, Helix_D2, 27000000, 1, 887
+simpleSRG, Helix_D3, 27000000, 1, 1680
+simpleSRG, Helix_D4, 27000000, 1, 2818
+simpleSRG, Helix_D5, 27000000, 1, 4158
+simpleSRG, CubeFull, 42875000, 1, 1561934
+simpleSRG, SphereFull, 42875000, 1, 713130
+simpleSRG, Helix_D1, 42875000, 1, 357
+simpleSRG, Helix_D2, 42875000, 1, 1051
+simpleSRG, Helix_D3, 42875000, 1, 1997
+simpleSRG, Helix_D4, 42875000, 1, 3251
+simpleSRG, Helix_D5, 42875000, 1, 4940
+simpleSRG, CubeFull, 64000000, 1, 2672695
+simpleSRG, SphereFull, 64000000, 1, 1270773
+simpleSRG, Helix_D1, 64000000, 1, 408
+simpleSRG, Helix_D2, 64000000, 1, 1228
+simpleSRG, Helix_D3, 64000000, 1, 2311
+simpleSRG, Helix_D4, 64000000, 1, 3751
+simpleSRG, Helix_D5, 64000000, 1, 5622
+simpleSRG, CubeFull, 91125000, 1, 3460077
+simpleSRG, SphereFull, 91125000, 1, 1783151
+simpleSRG, Helix_D1, 91125000, 1, 462
+simpleSRG, Helix_D2, 91125000, 1, 1368
+simpleSRG, Helix_D3, 91125000, 1, 2579
+simpleSRG, Helix_D4, 91125000, 1, 4213
+simpleSRG, Helix_D5, 91125000, 1, 6353
+simpleSRG, CubeFull, 125000000, 1, 5400507
+simpleSRG, SphereFull, 125000000, 1, 2644554
+simpleSRG, Helix_D1, 125000000, 1, 517
+simpleSRG, Helix_D2, 125000000, 1, 1517
+simpleSRG, Helix_D3, 125000000, 1, 3126
+simpleSRG, Helix_D4, 125000000, 1, 4859
+simpleSRG, Helix_D5, 125000000, 1, 7217
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6224579
+simpleSRG, Head of mouse, 350280000, 1, 7184543
+simpleSRG, Maus mit Draht, 495846240, 1, 101145
+simpleSRG, Skeleton, 26250510, 1, 3748
+simpleSRG, Skull of mouse, 350280000, 1, 303370
+simpleSRG, CubeFull, 166375000, 1, 7566265
+simpleSRG, SphereFull, 166375000, 1, 3713834
+simpleSRG, Helix_D1, 166375000, 1, 582
+simpleSRG, Helix_D2, 166375000, 1, 1717
+simpleSRG, Helix_D3, 166375000, 1, 3217
+simpleSRG, Helix_D4, 166375000, 1, 5305
+simpleSRG, Helix_D5, 166375000, 1, 7895
+simpleSRG, CubeFull, 512000000, 1, 24126634
+simpleSRG, SphereFull, 512000000, 1, 12351001
+simpleSRG, Helix_D1, 512000000, 1, 828
+simpleSRG, Helix_D2, 512000000, 1, 2629
+simpleSRG, Helix_D3, 512000000, 1, 4905
+simpleSRG, Helix_D4, 512000000, 1, 8171
+simpleSRG, Helix_D5, 512000000, 1, 11401
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6131444
+simpleSRG, Head of mouse, 350280000, 1, 7133988
+simpleSRG, Maus mit Draht, 495846240, 1, 97887
+simpleSRG, Skeleton, 26250510, 1, 4073
+simpleSRG, Skull of mouse, 350280000, 1, 271086
+simpleSRG, CubeFull, 166375000, 1, 7534533
+simpleSRG, SphereFull, 166375000, 1, 3672378
+simpleSRG, Helix_D1, 166375000, 1, 566
+simpleSRG, Helix_D2, 166375000, 1, 1703
+simpleSRG, Helix_D3, 166375000, 1, 3326
+simpleSRG, Helix_D4, 166375000, 1, 5472
+simpleSRG, Helix_D5, 166375000, 1, 8386
+simpleSRG, CubeFull, 512000000, 1, 23905903
+simpleSRG, SphereFull, 512000000, 1, 12369127
+simpleSRG, Helix_D1, 512000000, 1, 839
+simpleSRG, Helix_D2, 512000000, 1, 2509
+simpleSRG, Helix_D3, 512000000, 1, 4880
+simpleSRG, Helix_D4, 512000000, 1, 8137
+simpleSRG, Helix_D5, 512000000, 1, 12098
+simpleSRG, BoneMaskHigh, 2127360000, 1, 6142922
+simpleSRG, Head of mouse, 350280000, 1, 7157630
+simpleSRG, Maus mit Draht, 495846240, 1, 96113
+simpleSRG, Skeleton, 26250510, 1, 3820
+simpleSRG, Skull of mouse, 350280000, 1, 274309
+simpleSRG, CubeFull, 8000000, 1, 126398
+simpleSRG, SphereFull, 8000000, 1, 60849
+simpleSRG, Helix_D1, 8000000, 1, 269
+simpleSRG, Helix_D2, 8000000, 1, 559
+simpleSRG, Helix_D3, 8000000, 1, 1061
+simpleSRG, Helix_D4, 8000000, 1, 1699
+simpleSRG, Helix_D5, 8000000, 1, 2512
+simpleSRG, CubeFull, 15625000, 1, 365793
+simpleSRG, SphereFull, 15625000, 1, 138975
+simpleSRG, Helix_D1, 15625000, 1, 249
+simpleSRG, Helix_D2, 15625000, 1, 731
+simpleSRG, Helix_D3, 15625000, 1, 1345
+simpleSRG, Helix_D4, 15625000, 1, 2161
+simpleSRG, Helix_D5, 15625000, 1, 3216
+simpleSRG, CubeFull, 27000000, 1, 846476
+simpleSRG, SphereFull, 27000000, 1, 344036
+simpleSRG, Helix_D1, 27000000, 1, 308
+simpleSRG, Helix_D2, 27000000, 1, 885
+simpleSRG, Helix_D3, 27000000, 1, 1695
+simpleSRG, Helix_D4, 27000000, 1, 2733
+simpleSRG, Helix_D5, 27000000, 1, 4132
+simpleSRG, CubeFull, 42875000, 1, 1562229
+simpleSRG, SphereFull, 42875000, 1, 705767
+simpleSRG, Helix_D1, 42875000, 1, 354
+simpleSRG, Helix_D2, 42875000, 1, 1083
+simpleSRG, Helix_D3, 42875000, 1, 2033
+simpleSRG, Helix_D4, 42875000, 1, 3245
+simpleSRG, Helix_D5, 42875000, 1, 4827
+simpleSRG, CubeFull, 64000000, 1, 2664911
+simpleSRG, SphereFull, 64000000, 1, 1262301
+simpleSRG, Helix_D1, 64000000, 1, 412
+simpleSRG, Helix_D2, 64000000, 1, 1281
+simpleSRG, Helix_D3, 64000000, 1, 2306
+simpleSRG, Helix_D4, 64000000, 1, 3746
+simpleSRG, Helix_D5, 64000000, 1, 5574
+simpleSRG, CubeFull, 91125000, 1, 3482937
+simpleSRG, SphereFull, 91125000, 1, 1811346
+simpleSRG, Helix_D1, 91125000, 1, 461
+simpleSRG, Helix_D2, 91125000, 1, 1394
+simpleSRG, Helix_D3, 91125000, 1, 2598
+simpleSRG, Helix_D4, 91125000, 1, 4388
+simpleSRG, Helix_D5, 91125000, 1, 6494
+simpleSRG, CubeFull, 125000000, 1, 5364332
+simpleSRG, SphereFull, 125000000, 1, 2634030
+simpleSRG, Helix_D1, 125000000, 1, 528
+simpleSRG, Helix_D2, 125000000, 1, 1526
+simpleSRG, Helix_D3, 125000000, 1, 2912
+simpleSRG, Helix_D4, 125000000, 1, 4734
+simpleSRG, Helix_D5, 125000000, 1, 7103
+simpleSRG, CubeFull, 166375000, 1, 7443144
+simpleSRG, SphereFull, 166375000, 1, 3629526
+simpleSRG, Helix_D1, 166375000, 1, 564
+simpleSRG, Helix_D2, 166375000, 1, 1731
+simpleSRG, Helix_D3, 166375000, 1, 3306
+simpleSRG, Helix_D4, 166375000, 1, 5443
+simpleSRG, Helix_D5, 166375000, 1, 8291
+simpleSRG, CubeFull, 216000000, 1, 9891028
+simpleSRG, SphereFull, 216000000, 1, 5095639
+simpleSRG, Helix_D1, 216000000, 1, 627
+simpleSRG, Helix_D2, 216000000, 1, 1824
+simpleSRG, Helix_D3, 216000000, 1, 3468
+simpleSRG, Helix_D4, 216000000, 1, 5845
+simpleSRG, Helix_D5, 216000000, 1, 8381
+simpleSRG, CubeFull, 274625000, 1, 12670569
+simpleSRG, SphereFull, 274625000, 1, 6380349
+simpleSRG, Helix_D1, 274625000, 1, 670
+simpleSRG, Helix_D2, 274625000, 1, 1965
+simpleSRG, Helix_D3, 274625000, 1, 3734
+simpleSRG, Helix_D4, 274625000, 1, 6184
+simpleSRG, Helix_D5, 274625000, 1, 9261
+simpleSRG, CubeFull, 343000000, 1, 15810536
+simpleSRG, SphereFull, 343000000, 1, 7888911
+simpleSRG, Helix_D1, 343000000, 1, 736
+simpleSRG, Helix_D2, 343000000, 1, 2179
+simpleSRG, Helix_D3, 343000000, 1, 4264
+simpleSRG, Helix_D4, 343000000, 1, 6990
+simpleSRG, Helix_D5, 343000000, 1, 10229
+simpleSRG, CubeFull, 421875000, 1, 20453660
+simpleSRG, SphereFull, 421875000, 1, 10112623
+simpleSRG, Helix_D1, 421875000, 1, 785
+simpleSRG, Helix_D2, 421875000, 1, 2362
+simpleSRG, Helix_D3, 421875000, 1, 4482
+simpleSRG, Helix_D4, 421875000, 1, 7416
+simpleSRG, Helix_D5, 421875000, 1, 11289
+simpleSRG, CubeFull, 512000000, 1, 23800929
+simpleSRG, SphereFull, 512000000, 1, 12288449
+simpleSRG, Helix_D1, 512000000, 1, 878
+simpleSRG, Helix_D2, 512000000, 1, 2472
+simpleSRG, Helix_D3, 512000000, 1, 5071
+simpleSRG, Helix_D4, 512000000, 1, 8338
+simpleSRG, Helix_D5, 512000000, 1, 12579
